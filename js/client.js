@@ -85,10 +85,10 @@ var randomBadgeColor = function() {
 };
 
 var getBadges = function(t){
-  return t.card('name')
-  .get('name')
-  .then(function(cardName){
-    console.log('We just loaded the card name for fun: ' + cardName);
+  return t.card('id')
+  .get('id')
+  .then(function(cardId){
+    console.log('We just loaded the card name and id for fun: ' + cardId);
     
     return [{
       // dynamic badges can have their function rerun after a set number
@@ -120,7 +120,7 @@ var getBadges = function(t){
       callback: function(context) { // function to run on click
         return context.popup({
           title: 'Card Detail Badge Popup',
-          url: './settings.html?name='+cardName,
+          url: './settings.html?cardId=' + cardId,
           height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
         });
       }

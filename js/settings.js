@@ -25,13 +25,29 @@ t.render(function () {
     })
 });
 
+function GetURLParameter(sParam)
+{
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  for (var i = 0; i < sURLVariables.length; i++)
+  {
+    var sParameterName = sURLVariables[i].split('=');
+    if (sParameterName[0] == sParam)
+    {
+      return sParameterName[1];
+    }
+  }
+}​
+
 document.getElementById('save').addEventListener('click', function () {
 
   //https://api.trello.com/1/cards/id/actions
 
-  console.log('getting actions');
-  console.log(t.arg('name'));
-  var s = window.Trello.get('/cards/' + t.card('id').get('id') + '/actions')
+  var cardId = GetURLParameter('cardId');
+
+  console.log('getting actions of acardId' + cardId);
+
+  var s = window.Trello.get('/cards/' + cardId + '/actions')
   .then(function(s1,s2,s3){
     console.log('get actions');
     console.log(s1);
