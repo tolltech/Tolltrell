@@ -36,25 +36,6 @@ function GetUrlParam(partamName) {
   }
 }
 
-var authenticationSuccess = function() {
-  console.log('Successful authentication');
-};
-
-var authenticationFailure = function() {
-  console.log('Failed authentication');
-};
-
-window.Trello.authorize({
-  type: 'popup',
-  name: 'Getting Started Application',
-  scope: {
-    read: 'true',
-    write: 'false' },
-  expiration: 'never',
-  success: authenticationSuccess,
-  error: authenticationFailure
-});
-
 document.getElementById('save').addEventListener('click', function () {
 
   //https://api.trello.com/1/cards/id/actions
