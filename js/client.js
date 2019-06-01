@@ -89,7 +89,7 @@ var getBadges = function(t){
   .get('id')
   .then(function(cardId){
     console.log('We just loaded the card name and id for fun: ' + cardId);
-    
+
     return [{
       // dynamic badges can have their function rerun after a set number
       // of seconds defined by refresh. Minimum of 10 seconds.
@@ -249,6 +249,25 @@ var cardButtonCallback = function(t){
   });
   */
 };
+
+var authenticationSuccess = function() {
+  console.log('Successful authentication');
+};
+
+var authenticationFailure = function() {
+  console.log('Failed authentication');
+};
+
+window.Trello.authorize({
+  type: 'popup',
+  name: 'Getting Started Application',
+  scope: {
+    read: 'true',
+    write: 'false' },
+  expiration: 'never',
+  success: authenticationSuccess,
+  error: authenticationFailure
+});
 
 // We need to call initialize to get all of our capability handles set up and registered with Trello
 TrelloPowerUp.initialize({
@@ -442,22 +461,3 @@ TrelloPowerUp.initialize({
 });
 
 console.log('Loaded by: ' + document.referrer);
-
-var authenticationSuccess = function() {
-  console.log('Successful authentication');
-};
-
-var authenticationFailure = function() {
-  console.log('Failed authentication');
-};
-
-window.Trello.authorize({
-  type: 'popup',
-  name: 'Getting Started Application',
-  scope: {
-    read: 'true',
-    write: 'false' },
-  expiration: 'never',
-  success: authenticationSuccess,
-  error: authenticationFailure
-});
