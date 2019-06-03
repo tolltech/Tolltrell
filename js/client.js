@@ -28,7 +28,7 @@ var getBadges = async function (t) {
 
   return [{
     title: 'Days left',
-    text: listTimeDays + ' Days',
+    text: listTimeDays,
     icon: TOLLTECHER_ICON,
     color: null
   }];
