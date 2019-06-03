@@ -4,31 +4,29 @@ var Promise = TrelloPowerUp.Promise;
 
 var TOLLTECHER_ICON = './images/icon.png';
 
-var getBadges = function (t) {
-  return t.card('id')
-    .get('id')
-    .then(function (cardId) {
-      console.log('Getting card info for: ' + cardId);
+var getBadges = async function (t) {
+  var cardId = await t.card('id').get('id');
+  
+  console.log('Getting card info for: ' + cardId);
 
-      var cardInfo = await window.Trello.get('/cards/' + cardId); 
+  var cardInfo = await window.Trello.get('/cards/' + cardId);
 
-      console.log('Get card info for: ' + cardId + ' with name ' + cardInfo.name);
+  console.log('Get card info for: ' + cardId + ' with name ' + cardInfo.name);
 
-      var actions = await window.Trello.get('/cards/' + cardId + '/actions');
-      var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
+  var actions = await window.Trello.get('/cards/' + cardId + '/actions');
+  var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
 
-      console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
+  console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
 
-      var listTimeMiliseconds = new Date() - new Date(lastListAction.date);
-      var listTimeDays = listTimeMiliseconds / (1000 * 60 * 60 * 24);
+  var listTimeMiliseconds = new Date() - new Date(lastListAction.date);
+  var listTimeDays = listTimeMiliseconds / (1000 * 60 * 60 * 24);
 
-      return [{
-        title: 'Days left',
-        text: listTimeDays + ' Days',
-        icon: TOLLTECHER_ICON, 
-        color: null
-      }];
-    });
+  return [{
+    title: 'Days left',
+    text: listTimeDays + ' Days',
+    icon: TOLLTECHER_ICON,
+    color: null
+  }];
 };
 
 TrelloPowerUp.initialize({
