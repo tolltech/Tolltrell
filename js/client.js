@@ -6,7 +6,7 @@ var TOLLTECHER_ICON = './images/icon.png';
 
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
-  
+
   console.log('Getting card info for: ' + cardId);
 
   var cardInfo = await window.Trello.get('/cards/' + cardId);
@@ -19,7 +19,7 @@ var getBadges = async function (t) {
   console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
 
   var listTimeMiliseconds = new Date() - new Date(lastListAction.date);
-  var listTimeDays = listTimeMiliseconds / (1000 * 60 * 60 * 24);
+  var listTimeDays = Math.floor(listTimeMiliseconds / (1000 * 60 * 60 * 24));
 
   return [{
     title: 'Days left',
