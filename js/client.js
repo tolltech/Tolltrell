@@ -16,6 +16,11 @@ var getBadges = async function (t) {
   var actions = await window.Trello.get('/cards/' + cardId + '/actions');
   var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
 
+  if (!lastListAction){
+    console.log('No list changing action for ' + cardInfo.name);
+    return [];
+  }
+
   console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
 
   var listTimeMiliseconds = new Date() - new Date(lastListAction.date);
