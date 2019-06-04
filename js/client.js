@@ -13,7 +13,7 @@ var getBadges = async function (t) {
 
   console.log('Get card info for: ' + cardId + ' with name ' + cardInfo.name);
 
-  var actions = await window.Trello.get('/cards/' + cardId + '/actions');
+  var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all');
   var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
 
   if (!lastListAction){
