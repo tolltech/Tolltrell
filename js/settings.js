@@ -58,7 +58,7 @@ t.render(async function () {
             currentIterationKey = board && board.name || 'Unknown board';
         }
 
-        dates.push({ Name: currentIterationKey, Date: currentIterationDate });
+        dates.push({ Name: currentIterationKey, Date: action.date });
     }
 
     console.log(JSON.stringify(dates));
