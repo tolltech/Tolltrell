@@ -33,7 +33,13 @@ var getBadges = async function (t) {
     title: 'Days left',
     text: listTimeDays,
     icon: TOLLTECHER_ICON,
-    color: null
+    callback: function(context) {
+      return context.popup({
+        title: 'Card Lifestyle',
+        url: './settings.html?cardId=' + cardId,
+        height: 200
+      });
+    }
   }];
 };
 
