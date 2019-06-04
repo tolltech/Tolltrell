@@ -15,15 +15,18 @@ var getBadges = async function (t) {
 
   var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all');
   var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
+  var createCardOrBoardAction = actions.find(x => (x.type = "createCard" || x.type == "moveCardToBoard") && x.date);
 
-  if (!lastListAction){
-    console.log('No list changing action for ' + cardInfo.name);
+  if (!lastListAction && !createCardOrBoardAction){    
+    console.log('No list changing or createCard action for ' + cardInfo.name);
     return [];
   }
 
   console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
+  console.log('Find createCardOrboard action for ' + cardInfo.name + '. ' + JSON.stringify(createCardOrBoardAction));
 
-  var listTimeMiliseconds = new Date() - new Date(lastListAction.date);
+  var lastDate = lastListAction ? new Date(lastListAction.date) : new Date(createCardOrBoardAction.date);
+  var listTimeMiliseconds = new Date() - lastDate;
   var listTimeDays = Math.floor(listTimeMiliseconds / (1000 * 60 * 60 * 24));
 
   return [{
