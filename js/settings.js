@@ -31,7 +31,7 @@ t.render(async function () {
         return;
     }
 
-    var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all');
+    var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all&limit=1000');
 
     var createAction = actions.find(x => x.type == 'createCard');
     if (!createAction || !createAction.date) {
