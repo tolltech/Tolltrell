@@ -26,8 +26,8 @@ t.render(async function () {
     }
 
     var card = await window.Trello.get('/cards/' + cardId);
-    if (!card || !card.idBoard) {
-        console.log('Cant get boardId for card ' + cardId);
+    if (!card || !card.idBoard || !card.idList) {
+        console.log('Cant get boardId or listId for card ' + cardId);
         return;
     }
 
@@ -39,7 +39,7 @@ t.render(async function () {
         return;
     }
 
-    var createDate = createAction.date;
+    var createDate = new Date(createAction.date);
 
     var dates = [];
     var boards = {};
@@ -56,12 +56,38 @@ t.render(async function () {
             var boardId = action.data.boardSource.id;
             var board = boardId && (boards[boardId] || await window.Trello.get('/boards/' + boardId));
             currentIterationKey = board && board.name || 'Unknown board';
+        } else {
+            continue;
         }
 
-        dates.push({ Name: currentIterationKey, Date: action.date });
+        dates.push({ Name: currentIterationKey, Date: new Date(action.date) });
     }
 
+    var currentList = await window.Trello.get('/lists/' + card.idList)
+    dates.push({ Name: currentList.name, Date: new Date() });
+
     console.log(JSON.stringify(dates));
+
+    var currentDate = createDate;
+
+    var table = $('<table>').addClass('foo');
+    var th = $('<tr>');
+    var tr = $('<tr>');
+    for (var i = 0; i < dates.length; ++i) {
+
+        th.append($('<td>').text(dates[i].Name));
+
+        var delta = dates[i].Date - currentDate;
+        var deltaDays = Math.floor(delta / (1000 * 60 * 60 * 24));
+
+        tr.append($('<td>').text(deltaDays));
+
+        currentDate = dates[i].Date;
+    }
+
+    table.append(th);
+    table.append(tr);
+    $('#cardLifestyle').replaceWith(table);
 
     console.log('Rendered popup for card ' + cardId);
 });
