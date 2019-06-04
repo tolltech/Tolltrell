@@ -65,7 +65,7 @@ TrelloPowerUp.initialize({
 
     if (trelloAPIKey) {
       return t.popup({
-        title: 'My Auth Popup',
+        title: 'Tolltrell Auth Popup',
         args: { apiKey: trelloAPIKey },
         url: './authorize.html',
         height: 140,

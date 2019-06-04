@@ -8,7 +8,7 @@ var authenticationSuccess = function() {
   
   window.Trello.authorize({
     type: 'popup',
-    name: 'Getting Started Application',
+    name: 'Tolltrell',
     scope: {
       read: 'true',
       write: 'false' },
