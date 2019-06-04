@@ -6,44 +6,62 @@ var t = TrelloPowerUp.iframe();
 var fruitSelector = document.getElementById('fruit');
 var vegetableSelector = document.getElementById('vegetable');
 
-t.render(function () {
-  return new Promise(function (resolve, reject) {
-    resolve( console.log('Popup popuped!') );
-  });
-});
-
 function GetUrlParam(partamName) {
-  var url = window.location.search.substring(1);
-  var urlParams = url.split('&');
-  for (var i = 0; i < urlParams.length; ++i) {
-    var name = urlParams[i].split('=');
-    if (name[0] == partamName) {
-      return name[1];
+    var url = window.location.search.substring(1);
+    var urlParams = url.split('&');
+    for (var i = 0; i < urlParams.length; ++i) {
+        var name = urlParams[i].split('=');
+        if (name[0] == partamName) {
+            return name[1];
+        }
     }
-  }
 }
 
-document.getElementById('save').addEventListener('click', function () {
+t.render(async function () {
+    var cardId = GetUrlParam('cardId');
 
-  //https://api.trello.com/1/cards/id/actions
+    if (!cardId) {
+        console.log('Cant rendere popup without cardId');
+        return;
+    }
 
-  var cardId = GetUrlParam('cardId');
+    var card = await window.Trello.get('/cards/' + cardId);
+    if (!card || !card.idBoard) {
+        console.log('Cant get boardId for card ' + cardId);
+        return;
+    }
 
-  console.log('getting actions of acardId' + cardId);
+    var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all');
 
-  var s = window.Trello.get('/cards/' + cardId + '/actions')
-    .then(function (s1, s2, s3) {
-      console.log('get actions');
-      console.log(s1);
-      console.log(s2);
-      console.log(s3);
-    });
+    var createAction = actions.find(x => x.type == 'createCard');
+    if (!createAction || !createAction.date) {
+        console.log('Cant get createAction for card ' + cardId);
+        return;
+    }
 
-  return t.set('board', 'private', 'vegetable', vegetableSelector.value)
-    .then(function () {
-      return t.set('board', 'shared', 'fruit', fruitSelector.value);
-    })
-    .then(function () {
-      t.closePopup();
-    })
-})
+    var createDate = createAction.date;
+
+    var dates = [];
+    var boards = {};
+    var currentIterationKey;
+    for (var i = actions.length - 1; i >= 0; --i) {
+        var action = actions[i];
+        if (!action.date || !action.data) {
+            continue;
+        }
+
+        if (action.type == 'updateCard' && action.data.listBefore) {
+            currentIterationKey = action.data.listBefore.name;
+        } else if (action.type == 'moveCardToBoard' && action.data.boardSource) {
+            var boardId = action.data.boardSource.id;
+            var board = boardId && (boards[boardId] || await window.Trello.get('/boards/' + boardId));
+            currentIterationKey = board && board.name || 'Unknown board';
+        }
+
+        dates.push({ Name: currentIterationKey, Date: currentIterationDate });
+    }
+
+    console.log(JSON.stringify(dates));
+
+    console.log('Rendered popup for card ' + cardId);
+});
