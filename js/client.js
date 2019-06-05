@@ -33,7 +33,7 @@ var getBadges = async function (t) {
   var listTimeDays = Math.floor(listTimeMiliseconds / (1000 * 60 * 60 * 24));
 
   return [{
-    title: 'Days left',
+    title: 'Days',
     text: listTimeDays,
     icon: TOLLTECHER_ICON,
     callback: function (context) {
