@@ -15,10 +15,13 @@ var getBadges = async function (t) {
 
   //ToDo: отфильтровать по типу createCard, moveCardToBoard
   var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=all&limit=1000');
-  var lastListAction = actions.find(x => x.data && x.data.listAfter && x.date);
-  var createCardOrBoardAction = actions.find(x => (x.type = "createCard" || x.type == "moveCardToBoard") && x.date);
+  var lastListAction = actions.find(x => x.data && x.data.listAfter);
+  var moveToBoardAction = actions.find(x => x.type == "moveCardToBoard");
+  var createCardAction = actions.reverse().find(x => x.type = "createCard");
+  //todo: выделить в ДДД класс работу с датами
+  var createCardOrBoardAction = moveToBoardAction || createCardAction;
 
-  if (!lastListAction && !createCardOrBoardAction){    
+  if (!lastListAction && !createCardOrBoardAction) {
     console.log('No list changing or createCard action for ' + cardInfo.name);
     return [];
   }
@@ -34,7 +37,7 @@ var getBadges = async function (t) {
     title: 'Days left',
     text: listTimeDays,
     icon: TOLLTECHER_ICON,
-    callback: function(context) {
+    callback: function (context) {
       return context.popup({
         title: 'Card Lifestyle',
         url: './settings.html?cardId=' + cardId,
