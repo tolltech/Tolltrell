@@ -69,6 +69,30 @@ t.render(async function () {
     console.log(JSON.stringify(dates));
 
     var currentDate = createDate;
+    for (var i = 0; i < dates.length; ++i) {
+        var delta = dates[i].Date - currentDate;
+        var deltaDays = Math.floor(delta / (1000 * 60 * 60 * 24));
+        dates[i].Days = deltaDays;
+
+        currentDate = dates[i].Date;
+    }
+
+    var ctx = document.getElementById('cardLifestyleCanvas').getContext('2d');
+    var chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: dates.map(x => x.Name),
+            datasets: [{
+                label: 'Card days',
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: dates.map(x => x.Days)
+            }]
+        },
+
+        // Configuration options go here
+        options: {}
+    });
 
     var table = $('<table>').addClass('foo');
     var th = $('<tr>');
@@ -76,11 +100,7 @@ t.render(async function () {
     for (var i = 0; i < dates.length; ++i) {
 
         th.append($('<td>').text(dates[i].Name));
-
-        var delta = dates[i].Date - currentDate;
-        var deltaDays = Math.floor(delta / (1000 * 60 * 60 * 24));
-
-        tr.append($('<td>').text(deltaDays));
+        tr.append($('<td>').text(dates[i].Days));
 
         currentDate = dates[i].Date;
     }
