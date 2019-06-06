@@ -83,9 +83,9 @@ t.render(async function () {
         data: {
             labels: dates.map(x => x.Name),
             datasets: [{
-                label: 'Card days',
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgb(24, 249, 114)',
+                borderColor: 'rgb(24, 249, 114)',
+                label: 'days',
                 data: dates.map(x => x.Days)
             }]
         },
