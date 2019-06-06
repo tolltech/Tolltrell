@@ -13,9 +13,7 @@ var getBadges = async function (t) {
 
   console.log('Get card info for: ' + cardId + ' with name ' + cardInfo.name);
 
-  //todo: оптимизировать запрос, вытащить 1 с типом мув или апдейт
-  var researchActions = await window.Trello.get('/cards/' + cardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000');
-  var actions = await window.Trello.get('/cards/' + cardId + '/actions?filter=moveCardToBoard,createCard,updateCard&limit=1000');
+  var actions = await GetCardActions(cardId);
   var lastListAction = actions.find(x => x.data && x.data.listAfter);
   var moveToBoardAction = actions.find(x => x.type == "moveCardToBoard");
   var createCardAction = actions.reverse().find(x => x.type = "createCard");
