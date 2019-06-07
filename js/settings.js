@@ -31,6 +31,7 @@ t.render(async function () {
         return;
     }
 
+    var allActions = await GetAllCardActions(cardId);
     var actions = await GetCardActions(cardId);
 
     var createAction = actions.find(x => x.type == 'createCard');
@@ -55,8 +56,13 @@ t.render(async function () {
         } else if (action.type == 'moveCardToBoard' && action.data.boardSource) {
             var boardId = action.data.boardSource.id;
             var board = boardId && (boards[boardId] || await window.Trello.get('/boards/' + boardId));
+            boards[boardId] = board;
+
             currentIterationKey = board && board.name || 'Unknown board';
-        } else {
+        } else if (action.type == 'moveCardFromBoard'){
+            continue;
+        }
+        else {
             continue;
         }
 
