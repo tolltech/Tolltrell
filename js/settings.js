@@ -32,7 +32,37 @@ t.render(async function () {
     }
 
     var allActions = await GetAllCardActions(cardId);
-    var actions = await GetCardActions(cardId);
+    var actions = await GetCardChangeingActions(cardId);
+
+    var otherBoardIds = actions
+        .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != card.idBoard)
+        .map(x => x.data.boardSource.id)
+        //this is distinct()
+        .filter(function (value, index, self) {
+            return self.indexOf(value) === index;
+        });
+
+    var concatedActions = actions.map(x => x);
+    for (var i = 0; i < otherBoardIds.length; ++i) {
+        var boardActions = await GetBoardMovingActions(cardId, otherBoardIds[i]);
+        concatedActions = concatedActions.concat(boardActions)
+    }
+
+    concatedActions.sort(function (a, b) {
+        var keyA = new Date(a.date),
+            keyB = new Date(b.date);
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+    });
+
+    actions.sort(function (a, b) {
+        var keyA = new Date(a.date),
+            keyB = new Date(b.date);
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+    });
 
     var createAction = actions.find(x => x.type == 'createCard');
     if (!createAction || !createAction.date) {
@@ -45,7 +75,7 @@ t.render(async function () {
     var dates = [];
     var boards = {};
     var currentIterationKey;
-    for (var i = actions.length - 1; i >= 0; --i) {
+    for (var i = 0; i < actions.length; ++i) {
         var action = actions[i];
         if (!action.date || !action.data) {
             continue;
@@ -59,7 +89,7 @@ t.render(async function () {
             boards[boardId] = board;
 
             currentIterationKey = board && board.name || 'Unknown board';
-        } else if (action.type == 'moveCardFromBoard'){
+        } else if (action.type == 'moveCardFromBoard') {
             continue;
         }
         else {
