@@ -3,9 +3,6 @@
 var Promise = TrelloPowerUp.Promise;
 var t = TrelloPowerUp.iframe();
 
-var fruitSelector = document.getElementById('fruit');
-var vegetableSelector = document.getElementById('vegetable');
-
 function GetUrlParam(partamName) {
     var url = window.location.search.substring(1);
     var urlParams = url.split('&');
@@ -101,8 +98,6 @@ t.render(async function () {
 
     var currentList = await window.Trello.get('/lists/' + card.idList)
     dates.push({ Name: currentList.name, Date: new Date() });
-
-    console.log(JSON.stringify(dates));
 
     var currentDate = createDate;
     for (var i = 0; i < dates.length; ++i) {
