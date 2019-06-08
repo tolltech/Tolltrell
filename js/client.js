@@ -7,11 +7,7 @@ var TOLLTECHER_ICON = './images/icon.png';
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
 
-  console.log('Getting card info for: ' + cardId);
-
   var cardInfo = await window.Trello.get('/cards/' + cardId);
-
-  console.log('Get card info for: ' + cardId + ' with name ' + cardInfo.name);
 
   var actions = await GetCardChangeingActions(cardId);
   var lastListAction = actions.find(x => x.data && x.data.listAfter);
@@ -23,10 +19,7 @@ var getBadges = async function (t) {
   if (!lastListAction && !createCardOrBoardAction) {
     console.log('No list changing or createCard action for ' + cardInfo.name);
     return [];
-  }
-
-  console.log('Find last list changing action for ' + cardInfo.name + '. ' + JSON.stringify(lastListAction));
-  console.log('Find createCardOrboard action for ' + cardInfo.name + '. ' + JSON.stringify(createCardOrBoardAction));
+  } 
 
   var lastDate = lastListAction ? new Date(lastListAction.date) : new Date(createCardOrBoardAction.date);
   var listTimeMiliseconds = new Date() - lastDate;
