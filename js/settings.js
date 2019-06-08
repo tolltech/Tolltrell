@@ -22,13 +22,14 @@ t.render(async function () {
         return;
     }
 
+    console.log('Rendering popup for card ' + cardId);
+
     var card = await window.Trello.get('/cards/' + cardId);
     if (!card || !card.idBoard || !card.idList) {
         console.log('Cant get boardId or listId for card ' + cardId);
         return;
     }
 
-    var allActions = await GetAllCardActions(cardId);
     var actions = await GetCardChangeingActions(cardId);
 
     var otherBoardIds = actions
@@ -39,19 +40,10 @@ t.render(async function () {
             return self.indexOf(value) === index;
         });
 
-    var concatedActions = actions.map(x => x);
     for (var i = 0; i < otherBoardIds.length; ++i) {
         var boardActions = await GetBoardMovingActions(cardId, otherBoardIds[i]);
-        concatedActions = concatedActions.concat(boardActions)
+        actions = actions.concat(boardActions)
     }
-
-    concatedActions.sort(function (a, b) {
-        var keyA = new Date(a.date),
-            keyB = new Date(b.date);
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-    });
 
     actions.sort(function (a, b) {
         var keyA = new Date(a.date),
