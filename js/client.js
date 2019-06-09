@@ -4,6 +4,13 @@ var Promise = TrelloPowerUp.Promise;
 
 var TOLLTECHER_ICON = './images/icon.png';
 
+function intToString(num, size) {
+  var s = num + '';
+  size = size || 2;
+  while (s.length < size) s = '0' + s;
+  return s;
+}
+
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
 
@@ -51,7 +58,10 @@ var getReport = async function (t) {
 
   var now = new Date();
   var board = await window.Trello.get('/boards/' + boardId);
-  var csvName = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDay() + '_' + board.name + '.csv';
+  var csvName = now.getFullYear() + '-'
+    + intToString(now.getMonth() + 1) + '-'
+    + intToString(now.getDay() + 1) + '_'
+    + board.name + '.csv';
   DownloadCsv(rows, csvName);
 
   console.log('Generated report for board ' + boardId);
