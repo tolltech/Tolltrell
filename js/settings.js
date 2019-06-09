@@ -61,10 +61,11 @@ t.render(async function () {
 
     var createDate = new Date(createAction.date);
 
-    var currentBoard = await window.Trello.get('/boards/' + boardId);
-
-    var dates = [];
     var boards = {};
+    var currentBoard = await window.Trello.get('/boards/' + card.idBoard);
+    boards[card.idBoard] = currentBoard;
+
+    var actionInfos = [];    
     for (var i = 0; i < actions.length; ++i) {
         var action = actions[i];
         if (!action.date || !action.data) {
@@ -82,8 +83,8 @@ t.render(async function () {
             //карту сдвинули с "текущей" доски, должны узнать ее лист
             if (boardId == currentBoard.id && i > 0) {
                 var prevAction = actions[i - 1];
-                actionInfo.List = (prevAction.listAfter && prevAction.listAfter.name)
-                    || (prevAction.list && prevAction.list.name);
+                actionInfo.List = (prevAction.data.listAfter && prevAction.data.listAfter.name)
+                    || (prevAction.data.list && prevAction.data.list.name);
             }
             var board = boardId && (boards[boardId] || await window.Trello.get('/boards/' + boardId));
             boards[boardId] = board;
@@ -97,31 +98,31 @@ t.render(async function () {
         }
 
         actionInfo.Name = actionInfo.List || actionInfo.Board;
-        dates.push(actionInfo);
+        actionInfos.push(actionInfo);
     }
 
     var currentList = await window.Trello.get('/lists/' + card.idList)
-    dates.push({ Name: currentList.name, Date: new Date() });
+    actionInfos.push({ Name: currentList.name, Date: new Date() });
 
     var currentDate = createDate;
-    for (var i = 0; i < dates.length; ++i) {
-        var delta = dates[i].Date - currentDate;
+    for (var i = 0; i < actionInfos.length; ++i) {
+        var delta = actionInfos[i].Date - currentDate;
         var deltaDays = Math.floor(delta / (1000 * 60 * 60 * 24));
-        dates[i].Days = deltaDays;
+        actionInfos[i].Days = deltaDays;
 
-        currentDate = dates[i].Date;
+        currentDate = actionInfos[i].Date;
     }
 
     var ctx = document.getElementById('cardLifestyleCanvas').getContext('2d');
     var chart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: dates.map(x => x.Name),
+            labels: actionInfos.map(x => x.Name),
             datasets: [{
                 backgroundColor: 'rgb(24, 249, 114)',
                 borderColor: 'rgb(24, 249, 114)',
                 label: 'days',
-                data: dates.map(x => x.Days)
+                data: actionInfos.map(x => x.Days)
             }]
         },
 
@@ -132,12 +133,12 @@ t.render(async function () {
     var table = $('<table>').addClass('foo');
     var th = $('<tr>');
     var tr = $('<tr>');
-    for (var i = 0; i < dates.length; ++i) {
+    for (var i = 0; i < actionInfos.length; ++i) {
 
-        th.append($('<td>').text(dates[i].Name));
-        tr.append($('<td>').text(dates[i].Days));
+        th.append($('<td>').text(actionInfos[i].Name));
+        tr.append($('<td>').text(actionInfos[i].Days));
 
-        currentDate = dates[i].Date;
+        currentDate = actionInfos[i].Date;
     }
 
     table.append(th);
