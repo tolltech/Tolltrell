@@ -61,23 +61,34 @@ t.render(async function () {
 
     var createDate = new Date(createAction.date);
 
+    var currentBoard = await window.Trello.get('/boards/' + boardId);
+
     var dates = [];
     var boards = {};
-    var currentIterationKey;
     for (var i = 0; i < actions.length; ++i) {
         var action = actions[i];
         if (!action.date || !action.data) {
             continue;
         }
 
+        var actionInfo = {
+            Date: new Date(action.date)
+        };
+
         if (action.type == 'updateCard' && action.data.listBefore) {
-            currentIterationKey = action.data.listBefore.name;
-        } else if (action.type == 'moveCardToBoard' && action.data.boardSource) {
+            actionInfo.List = action.data.listBefore.name;
+        } else if (action.type == 'moveCardToBoard') {                        
             var boardId = action.data.boardSource.id;
+            //карту сдвинули с "текущей" доски, должны узнать ее лист
+            if (boardId == currentBoard.id && i > 0) {
+                var prevAction = actions[i - 1];
+                actionInfo.List = (prevAction.listAfter && prevAction.listAfter.name)
+                    || (prevAction.list && prevAction.list.name);
+            }
             var board = boardId && (boards[boardId] || await window.Trello.get('/boards/' + boardId));
             boards[boardId] = board;
 
-            currentIterationKey = board && board.name || 'Unknown board';
+            actionInfo.Board = board && board.name || 'Unknown board';
         } else if (action.type == 'moveCardFromBoard') {
             continue;
         }
@@ -85,7 +96,8 @@ t.render(async function () {
             continue;
         }
 
-        dates.push({ Name: currentIterationKey, Date: new Date(action.date) });
+        actionInfo.Name = actionInfo.List || actionInfo.Board;
+        dates.push(actionInfo);
     }
 
     var currentList = await window.Trello.get('/lists/' + card.idList)
