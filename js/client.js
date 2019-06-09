@@ -45,23 +45,15 @@ var getReport = async function (t) {
   console.log('Generating report for board ' + boardId);
 
   const rows = [
-    ["name1", "city1", "some other info"],
-    ["name2", "city2", "more info"]
+    ["name1", "cuty1", "other info"],
+    ["name2", "cuty2", "other info2"]
   ];
 
-  let csvContent = "data:text/csv;charset=utf-8,"
-    + rows.map(e => e.join(",")).join("\n");
+  let csv = 'data:text/csv;charset=utf-8'
+  + rows.map(x=>x.join(",").join('\r\n'));
 
-  var encodedUri = encodeURI(csvContent);
-  window.open(encodedUri);
-
-  // var encodedUri = encodeURI(csvContent);
-  // var link = document.createElement("a");
-  // link.setAttribute("href", encodedUri);
-  // link.setAttribute("download", "my_data.csv");
-  // document.body.appendChild(link); // Required for FF
-
-  // link.click();
+  var url = encodeURI(csv);
+  window.open(url);
 };
 
 TrelloPowerUp.initialize({
