@@ -49,7 +49,10 @@ var getReport = async function (t) {
     ['name2', 'cuty2', 'other info2']
   ];
 
-  await DownloadCsv(rows);
+  var now = new Date();
+  var board = await window.Trello.get('/boards/' + boardId);
+  var csvName = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDay() + '_' + board.name + '.csv';
+  DownloadCsv(rows, csvName);
 
   console.log('Generated report for board ' + boardId);
 };
