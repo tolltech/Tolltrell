@@ -49,8 +49,8 @@ var getReport = async function (t) {
     ["name2", "cuty2", "other info2"]
   ];
 
-  let csv = 'data:text/csv;charset=utf-8'
-  + rows.map(x=>x.join(",").join('\r\n'));
+  var csv = 'data:text/csv;charset=utf-8'
+  + rows.map(x=>x.join(",")).join('\r\n');
 
   var url = encodeURI(csv);
   window.open(url);
