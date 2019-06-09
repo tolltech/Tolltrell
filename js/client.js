@@ -11,8 +11,8 @@ var getBadges = async function (t) {
 
   var actions = await GetCardChangeingActions(cardId);
   var lastListAction = actions.find(x => x.data && x.data.listAfter);
-  var moveToBoardAction = actions.find(x => x.type == "moveCardToBoard");
-  var createCardAction = actions.reverse().find(x => x.type = "createCard");
+  var moveToBoardAction = actions.find(x => x.type == 'moveCardToBoard');
+  var createCardAction = actions.reverse().find(x => x.type = 'createCard');
   //todo: выделить в ДДД класс работу с датами
   var createCardOrBoardAction = moveToBoardAction || createCardAction;
 
@@ -45,15 +45,20 @@ var getReport = async function (t) {
   console.log('Generating report for board ' + boardId);
 
   const rows = [
-    ["name1", "cuty1", "other info"],
-    ["name2", "cuty2", "other info2"]
+    ['name1', 'cuty1', 'other info'],
+    ['name2', 'cuty2', 'other info2']
   ];
 
   var csv = 'data:text/csv;charset=utf-8'
-  + rows.map(x=>x.join(",")).join('\r\n');
+    + rows.map(x => x.join(',')).join('\r\n');
 
-  var url = encodeURI(csv);
-  window.open(url);
+  var encodedUri = encodeURI(csv);
+  var link = document.createElement('a');
+  link.setAttribute('href', encodedUri);
+  link.setAttribute('download', new Date() + '' + '.csv');
+  document.body.appendChild(link); // Required for FF
+
+  console.log('Generated report for board ' + boardId);
 };
 
 TrelloPowerUp.initialize({
@@ -102,7 +107,7 @@ TrelloPowerUp.initialize({
         height: 140,
       });
     } else {
-      console.log("🙈 Looks like you need to add your API key to the project!");
+      console.log('🙈 Looks like you need to add your API key to the project!');
     }
   }
 });
