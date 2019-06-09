@@ -72,7 +72,7 @@ TrelloPowerUp.initialize({
         return getReport(t);
       }
     }];
-  }
+  },
   /*        
       
       🔑 Authorization Capabiltiies 🗝
