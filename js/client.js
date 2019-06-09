@@ -58,6 +58,8 @@ var getReport = async function (t) {
   link.setAttribute('download', new Date() + '' + '.csv');
   document.body.appendChild(link); // Required for FF
 
+  link.click();
+
   console.log('Generated report for board ' + boardId);
 };
 
