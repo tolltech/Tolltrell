@@ -49,16 +49,7 @@ var getReport = async function (t) {
     ['name2', 'cuty2', 'other info2']
   ];
 
-  var csv = 'data:text/csv;charset=utf-8'
-    + rows.map(x => x.join(',')).join('\r\n');
-
-  var encodedUri = encodeURI(csv);
-  var link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
-  link.setAttribute('download', new Date() + '' + '.csv');
-  document.body.appendChild(link); // Required for FF
-
-  link.click();
+  await DownloadCsv(rows);
 
   console.log('Generated report for board ' + boardId);
 };
