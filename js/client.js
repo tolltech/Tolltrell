@@ -19,7 +19,7 @@ var getBadges = async function (t) {
   if (!lastListAction && !createCardOrBoardAction) {
     console.log('No list changing or createCard action for ' + cardInfo.name);
     return [];
-  } 
+  }
 
   var lastDate = lastListAction ? new Date(lastListAction.date) : new Date(createCardOrBoardAction.date);
   var listTimeMiliseconds = new Date() - lastDate;
@@ -39,6 +39,31 @@ var getBadges = async function (t) {
   }];
 };
 
+var getReport = async function (t) {
+  var boardId = await t.board('id').get('id');
+
+  console.log('Generating report for board ' + boardId);
+
+  const rows = [
+    ["name1", "city1", "some other info"],
+    ["name2", "city2", "more info"]
+  ];
+
+  let csvContent = "data:text/csv;charset=utf-8,"
+    + rows.map(e => e.join(",")).join("\n");
+
+  var encodedUri = encodeURI(csvContent);
+  window.open(encodedUri);
+
+  // var encodedUri = encodeURI(csvContent);
+  // var link = document.createElement("a");
+  // link.setAttribute("href", encodedUri);
+  // link.setAttribute("download", "my_data.csv");
+  // document.body.appendChild(link); // Required for FF
+
+  // link.click();
+};
+
 TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
     return getBadges(t);
@@ -47,6 +72,15 @@ TrelloPowerUp.initialize({
     return getBadges(t);
   },
 
+  'board-buttons': function (t, options) {
+    return [{
+      icon: TOLLTECHER_ICON,
+      text: 'Cards life',
+      callback: function (t, options) {
+        return getReport(t);
+      }
+    }];
+  }
   /*        
       
       🔑 Authorization Capabiltiies 🗝
