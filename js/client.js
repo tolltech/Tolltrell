@@ -16,7 +16,7 @@ var getBadges = async function (t) {
 
   var cardInfo = await window.Trello.get('/cards/' + cardId);
 
-  var actions = await GetCardChangeingActions(cardId);
+  var actions = await GetCardChangingActions(cardId);
   var lastListAction = actions.find(x => x.data && x.data.listAfter);
   var moveToBoardAction = actions.find(x => x.type == 'moveCardToBoard');
   var createCardAction = actions.reverse().find(x => x.type = 'createCard');
