@@ -1,10 +1,10 @@
 var boards = {};
-async function GetBoard(boardId){
+async function GetBoard(boardId) {
     return boards[boardId] || (boards[boardId] = await window.Trello.get('/boards/' + boardId));
 }
 
 var lists = {};
-async function GetList(listId){
+async function GetList(listId) {
     return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId));
 }
 
@@ -14,11 +14,8 @@ async function BuildActionInfosByCard(card) {
 
     var otherBoardIds = actions
         .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != card.idBoard)
-        .map(x => x.data.boardSource.id)
-        //this is distinct()
-        .filter(function (value, index, self) {
-            return self.indexOf(value) === index;
-        });
+        .map(x => x.data.boardSource.id);
+    otherBoardIds = distinct(otherBoardIds);
 
     for (var i = 0; i < otherBoardIds.length; ++i) {
         var boardActions = await GetBoardMovingActionsByCard(cardId, otherBoardIds[i]);
@@ -85,7 +82,7 @@ async function BuildActionInfosByCard(card) {
         actionInfos.push(actionInfo);
     }
 
-    var currentList = await GetList(card.idList);    
+    var currentList = await GetList(card.idList);
     actionInfos.push({ Name: currentList.name, Date: new Date() });
 
     var currentDate = createDate;
@@ -96,5 +93,5 @@ async function BuildActionInfosByCard(card) {
 
         currentDate = actionInfos[i].Date;
     }
-    return actionInfos;    
+    return actionInfos;
 }
