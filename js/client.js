@@ -63,7 +63,7 @@ var getReport = async function (t) {
     var actions = await BuildActionInfosByCard(card);
 
     actionsByCard[cardId] = {};
-    actionsByCard[cardId].Ations = actions;
+    actionsByCard[cardId].Actions = actions;
     actionsByCard[cardId].Card = card;
 
     for (var j = 0; j < actions.length; ++j) {
