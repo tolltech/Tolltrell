@@ -8,6 +8,12 @@ async function GetList(listId) {
     return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId));
 }
 
+var boardsMovingActions = {};
+async function GetBoardsMovingActions(cardId, boardId) {
+    var allActions = boardsMovingActions[boardId] || (boardsMovingActions[boardId] = await GetBoardMovingActionsByCard(boardId));
+    return allActions.filter(x => x.data.card && x.data.card.id == cardId);
+}
+
 async function BuildActionInfosByCard(card) {
     var cardId = card.id;
     var actions = await GetCardChangingActions(cardId);
@@ -18,12 +24,11 @@ async function BuildActionInfosByCard(card) {
     otherBoardIds = distinct(otherBoardIds);
 
     for (var i = 0; i < otherBoardIds.length; ++i) {
-        var boardActions = await GetBoardMovingActionsByCard(cardId, otherBoardIds[i]);
+        var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
         actions = actions.concat(boardActions)
     }
 
     if (actions.length <= 0) {
-        console.log('Not enough actions of card ' + card.name);
         return [];
     }
 
@@ -44,8 +49,7 @@ async function BuildActionInfosByCard(card) {
 
     var createDate = new Date(createAction.date);
 
-    var currentBoard = await window.Trello.get('/boards/' + card.idBoard);
-    boards[card.idBoard] = currentBoard;
+    var currentBoard = await GetBoard(card.idBoard);
 
     var actionInfos = [];
     for (var i = 0; i < actions.length; ++i) {
@@ -82,8 +86,12 @@ async function BuildActionInfosByCard(card) {
         actionInfos.push(actionInfo);
     }
 
-    var currentList = await GetList(card.idList);
-    actionInfos.push({ Name: currentList.name, Date: new Date() });
+    var lastAction = actions[actions.length - 1];
+    var lastListId = (lastAction.data.listAfter && lastAction.data.listAfter.id)
+        || (lastAction.data.list && lastAction.data.list.id);
+    var lastActionName = lastListId ? await GetList(lastListId).name : currentBoard.name;
+
+    actionInfos.push({ Name: lastActionName, Date: new Date() });
 
     var currentDate = createDate;
     for (var i = 0; i < actionInfos.length; ++i) {
