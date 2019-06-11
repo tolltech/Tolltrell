@@ -81,11 +81,7 @@ var getReport = async function (t) {
     var cardId = cardIds[i];
     var cardActions = actionsByCard[cardId];
 
-    var cardDaysByName = cardActions.Actions.reduce(function (map, cardAction) {
-      var current = map[cardAction.Name];
-      map[cardAction.Name] = current ? current + cardAction.Days : cardAction.Days;
-      return map;
-    }, {});
+    var cardDaysByName = sumDays(cardActions.Actions);
 
     rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] === undefined ? -1 : cardDaysByName[x])));
   }
