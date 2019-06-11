@@ -51,7 +51,7 @@ var getReport = async function (t) {
 
   console.log('Generating report for board ' + boardId);
 
-  var boardActions = GetBoardCardActions(boardId);
+  var boardActions = await GetBoardCardActions(boardId);
   var cardIds = boardActions.filter(x => x.data.card).map(x => x.data.card.id);
   cardIds = distinct(cardIds);
 
@@ -60,7 +60,7 @@ var getReport = async function (t) {
   for (var i = 0; i < cardIds; ++i) {
     var cardId = cardIds[i];
     var card = await window.Trello.get('/cards/' + cardId);
-    var actions = await BuildActionInfosByCard(card)
+    var actions = await BuildActionInfosByCard(card);
 
     actionsByCard[cardId] = {};
     actionsByCard[cardId].Ations = actions;
