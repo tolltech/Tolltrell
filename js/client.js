@@ -57,7 +57,7 @@ var getReport = async function (t) {
 
   var actionsByCard = {};
   var names = [];
-  for (var i = 0; i < cardIds; ++i) {
+  for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
     var card = await window.Trello.get('/cards/' + cardId);
     var actions = await BuildActionInfosByCard(card);
@@ -77,7 +77,7 @@ var getReport = async function (t) {
   //header = 'Card, ... actions
   rows.push(['Card'].concat(headerRow));
 
-  for (var i = 0; i < cardIds; ++i) {
+  for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
     var cardActions = actionsByCard[cardId];
 
