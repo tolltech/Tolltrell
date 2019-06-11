@@ -96,7 +96,7 @@ async function BuildActionInfosByCard(card) {
     var currentDate = createDate;
     for (var i = 0; i < actionInfos.length; ++i) {
         var delta = actionInfos[i].Date - currentDate;
-        var deltaDays = Math.floor(delta / (1000 * 60 * 60 * 24));
+        var deltaDays = delta / (1000.0 * 60 * 60 * 24);
         actionInfos[i].Days = deltaDays;
 
         currentDate = actionInfos[i].Date;

@@ -55,7 +55,7 @@ t.render(async function () {
     for (var i = 0; i < actionInfos.length; ++i) {
 
         th.append($('<td>').text(actionInfos[i].Name));
-        tr.append($('<td>').text(actionInfos[i].Days));
+        tr.append($('<td>').text(Math.floor(actionInfos[i].Days)));
 
         currentDate = actionInfos[i].Date;
     }

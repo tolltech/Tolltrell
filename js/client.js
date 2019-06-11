@@ -82,7 +82,8 @@ var getReport = async function (t) {
     var cardActions = actionsByCard[cardId];
 
     var cardDaysByName = cardActions.Actions.reduce(function (map, cardAction) {
-      map[cardAction.Name] = cardAction.Days;
+      var current = map[cardAction.Name];
+      map[cardAction.Name] = current ? current + cardAction.Days : cardAction.Days;
       return map;
     }, {});
 
