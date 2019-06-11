@@ -86,7 +86,7 @@ var getReport = async function (t) {
       return map;
     }, {});
 
-    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] || -1)));
+    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] === undefined ? -1 : cardDaysByName[x])));
   }
 
   var now = new Date();
