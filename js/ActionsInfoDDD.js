@@ -87,10 +87,10 @@ async function BuildActionInfosByCard(card) {
     }
 
     var lastAction = actions[actions.length - 1];
-    var lastListId = (lastAction.data.listAfter && lastAction.data.listAfter.id)
-        || (lastAction.data.list && lastAction.data.list.id);
-    var lastActionName = lastListId ? await GetList(lastListId).name : currentBoard.name;
-
+    var lastActionName = (lastAction.data.listAfter && lastAction.data.listAfter.name)
+        || (lastAction.data.list && lastAction.data.list.name)
+        || currentBoard.name;
+    
     actionInfos.push({ Name: lastActionName, Date: new Date() });
 
     var currentDate = createDate;
