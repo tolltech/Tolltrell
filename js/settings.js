@@ -47,6 +47,13 @@ t.render(async function () {
 
     var actionInfos = await BuildActionInfosByCard(card);
     var sumActionInfos = sumDays(actionInfos);
+    //todo: спрятать внутрь sumDays
+    sumActionInfos = Object.entries(sumActionInfos).map(function (x) {
+        var s = {};
+        s.Name = x[0];
+        s.Days = x[1];
+        return s;
+    });
 
     var ctx = document.getElementById('cardLifestyleCanvas').getContext('2d');
     var chart = new Chart(ctx, {
@@ -63,7 +70,7 @@ t.render(async function () {
 
         // Configuration options go here
         options: {}
-    });    
+    });
 
     AddTable(sumActionInfos, 'cardLifestyleSum');
     AddTable(actionInfos, 'cardLifestyle');
