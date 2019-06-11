@@ -51,10 +51,43 @@ var getReport = async function (t) {
 
   console.log('Generating report for board ' + boardId);
 
-  const rows = [
-    ['name1', 'cuty1', 'other info'],
-    ['name2', 'cuty2', 'other info2']
-  ];
+  var boardActions = GetBoardCardActions(boardId);
+  var cardIds = boardActions.filter(x => x.data.card).map(x => x.data.card.id);
+  cardIds = distinct(cardIds);
+
+  var actionsByCard = {};
+  var names = [];
+  for (var i = 0; i < cardIds; ++i) {
+    var cardId = cardIds[i];
+    var card = await window.Trello.get('/cards/' + cardId);
+    var actions = await BuildActionInfosByCard(card)
+
+    actionsByCard[cardId] = {};
+    actionsByCard[cardId].Ations = actions;
+    actionsByCard[cardId].Card = card;
+
+    for (var j = 0; j < actions.length; ++j) {
+      names.push(actions[j].Name);
+    }
+  }
+
+  var headerRow = distinct(names);
+
+  var rows = [];
+  //header = 'Card, ... actions
+  rows.push(['Card'].concat(headerRow));
+
+  for (var i = 0; i < cardIds; ++i) {
+    var cardId = cardIds[i];
+    var cardActions = actionsByCard[cardId];
+
+    var cardDaysByName = cardActions.Actions.reduce(function (map, cardAction) {
+      map[cardAction.Name] = cardAction.Days;
+      return map;
+    }, {});
+
+    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] && -1)));
+  }
 
   var now = new Date();
   var board = await window.Trello.get('/boards/' + boardId);
