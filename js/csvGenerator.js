@@ -1,6 +1,6 @@
 function DownloadCsv(rows, name) {
     var csv = 'data:text/csv;charset=utf-8'
-        + rows.map(x => x.join(';')).join('\r\n');
+        + rows.map(x => x.join(';')).join('\n');
 
     var encodedUri = encodeURI(csv);
     var link = document.createElement('a');
