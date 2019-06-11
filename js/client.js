@@ -83,7 +83,7 @@ var getReport = async function (t) {
 
     var cardDaysByName = sumDays(cardActions.Actions);
 
-    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] === undefined ? -1 : cardDaysByName[x])));
+    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] === undefined ? 0 : cardDaysByName[x])));
   }
 
   var now = new Date();
