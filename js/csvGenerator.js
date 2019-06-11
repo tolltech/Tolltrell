@@ -1,11 +1,11 @@
 function DownloadCsv(rows, name) {
-    var csv = 'data:text/csv;charset=utf-8'
-        + rows.map(x => x.join(';')).join('\n');
+    var csv = 'data:text/plain;charset=utf-8,'
+        + encodeURIComponent(rows.map(x => x.join('\t')).join('\n'));
 
-    var encodedUri = encodeURI(csv);
     var link = document.createElement('a');
-    link.setAttribute('href', encodedUri);    
+    link.setAttribute('href', csv);    
     link.setAttribute('download', name);
+    link.style.display = 'none';
     document.body.appendChild(link); // Required for FF
 
     link.click();
