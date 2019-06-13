@@ -14,9 +14,14 @@ async function GetBoardsMovingActions(cardId, boardId) {
     return allActions.filter(x => x.data.card && x.data.card.id == cardId);
 }
 
+var cardsChangingActionsCache = {};
+async function GetCardChangingActionsCached(cardId){
+    return cardsChangingActionsCache[cardId] || (cardsChangingActionsCache[cardId] = await GetCardChangingActions(cardId));
+}
+
 async function BuildActionInfosByCard(card) {
     var cardId = card.id;
-    var actions = await GetCardChangingActions(cardId);
+    var actions = await GetCardChangingActionsCached(cardId);
 
     var otherBoardIds = actions
         .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != card.idBoard)
