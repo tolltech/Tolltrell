@@ -6,8 +6,15 @@ function distinct(array){
 
 function sumDays(actions){
     return actions.reduce(function (map, cardAction) {
-        var current = map[cardAction.Name];
-        map[cardAction.Name] = current ? current + cardAction.Days : cardAction.Days;
+        var current = map[cardAction.Id];
+        map[cardAction.Id] = current ? current + cardAction.Days : cardAction.Days;
+        return map;
+      }, {});
+}
+
+function toDict(array, getKey, getValue){
+    return array.reduce(function (map, item) {
+        map[getKey(item)] = getValue(item);
         return map;
       }, {});
 }

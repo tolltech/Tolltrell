@@ -56,7 +56,8 @@ var getReport = async function (t) {
   cardIds = distinct(cardIds);
 
   var actionsByCard = {};
-  var names = [];
+  var nameIds = [];
+  var nameByIds = {};
   for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
     var card = await window.Trello.get('/cards/' + cardId);
@@ -67,23 +68,24 @@ var getReport = async function (t) {
     actionsByCard[cardId].Card = card;
 
     for (var j = 0; j < actions.length; ++j) {
-      names.push(actions[j].Name);
+      nameByIds[actions[j].Id] = actions[j].Name;
+      nameIds.push(actions[j].Id);
     }
   }
 
-  var headerRow = distinct(names);
+  var headerRow = distinct(nameIds);
 
   var rows = [];
   //header = 'Card, ... actions
-  rows.push(['Card'].concat(headerRow));
+  rows.push(['Card'].concat(headerRow.map(x => nameByIds[x])));
 
   for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
     var cardActions = actionsByCard[cardId];
 
-    var cardDaysByName = sumDays(cardActions.Actions);
+    var cardDaysById = sumDays(cardActions.Actions);
 
-    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysByName[x] === undefined ? 0 : cardDaysByName[x])));
+    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysById[x] === undefined ? 0 : cardDaysById[x])));
   }
 
   var now = new Date();

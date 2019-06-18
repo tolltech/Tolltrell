@@ -46,11 +46,12 @@ t.render(async function () {
     }
 
     var actionInfos = await BuildActionInfosByCard(card);
+    var nameByIds = toDict(actionInfos, x => x.Id, x => x.Name);
     var sumActionInfos = sumDays(actionInfos);
     //todo: спрятать внутрь sumDays
     sumActionInfos = Object.entries(sumActionInfos).map(function (x) {
         var s = {};
-        s.Name = x[0];
+        s.Name = nameByIds[x[0]];
         s.Days = x[1];
         return s;
     });
