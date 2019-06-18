@@ -69,17 +69,20 @@ async function BuildActionInfosByCard(card) {
 
         if (action.type == 'updateCard' && action.data.listBefore) {
             actionInfo.List = action.data.listBefore.name;
+            actionInfo.ListId = action.data.listBefore.id;
         } else if (action.type == 'moveCardToBoard') {
             var boardId = action.data.boardSource.id;
             //карту сдвинули с "текущей" доски, должны узнать ее лист
             if (boardId == currentBoard.id && i > 0) {
                 var prevAction = actions[i - 1];
-                actionInfo.List = (prevAction.data.listAfter && prevAction.data.listAfter.name)
-                    || (prevAction.data.list && prevAction.data.list.name);
+                var list = prevAction.data.listAfter || prevAction.data.list;
+                actionInfo.List = list && list.name;
+                actionInfo.ListId = list && list.id;
             }
 
             var board = boardId && await GetBoard(boardId);
             actionInfo.Board = board && board.name || 'Unknown board';
+            actionInfo.BoardId = boardId;
         } else if (action.type == 'moveCardFromBoard') {
             continue;
         }
@@ -88,15 +91,18 @@ async function BuildActionInfosByCard(card) {
         }
 
         actionInfo.Name = actionInfo.List || actionInfo.Board;
+        actionInfo.Id = actionInfo.ListId || actionInfo.BoardId;
         actionInfos.push(actionInfo);
     }
 
     var lastAction = actions[actions.length - 1];
-    var lastActionName = (lastAction.data.listAfter && lastAction.data.listAfter.name)
-        || (lastAction.data.list && lastAction.data.list.name)
+    var lastActionList = lastAction.data.listAfter || lastAction.data.list;
+    var lastActionName = (lastActionList && lastActionList.name)
         || currentBoard.name;
-    
-    actionInfos.push({ Name: lastActionName, Date: new Date() });
+    var lastActionId = (lastActionList && lastActionList.id)
+    || currentBoard.id;
+
+    actionInfos.push({ Name: lastActionName, Date: new Date(), Id:  lastActionId, ListId: lastActionList && lastActionList.id, BoardId: currentBoard.Id});
 
     var currentDate = createDate;
     for (var i = 0; i < actionInfos.length; ++i) {
