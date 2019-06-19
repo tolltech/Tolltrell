@@ -15,7 +15,7 @@ async function GetBoardsMovingActions(cardId, boardId) {
 }
 
 var cardsChangingActionsCache = {};
-async function GetCardChangingActionsCached(cardId){
+async function GetCardChangingActionsCached(cardId) {
     return cardsChangingActionsCache[cardId] || (cardsChangingActionsCache[cardId] = await GetCardChangingActions(cardId));
 }
 
@@ -29,8 +29,13 @@ async function BuildActionInfosByCard(card) {
     otherBoardIds = distinct(otherBoardIds);
 
     for (var i = 0; i < otherBoardIds.length; ++i) {
-        var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
-        actions = actions.concat(boardActions)
+        try {
+            var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
+            actions = actions.concat(boardActions)
+        } catch (err) {
+            console.log('Error while get actions for board ' + otherBoardIds[i] + ' Error ' + JSON.stringify(err));
+            console.log('Actions ' + JSON.stringify(actions));
+        }
     }
 
     if (actions.length <= 0) {
@@ -100,9 +105,9 @@ async function BuildActionInfosByCard(card) {
     var lastActionName = (lastActionList && lastActionList.name)
         || currentBoard.name;
     var lastActionId = (lastActionList && lastActionList.id)
-    || currentBoard.id;
+        || currentBoard.id;
 
-    actionInfos.push({ Name: lastActionName, Date: new Date(), Id:  lastActionId, ListId: lastActionList && lastActionList.id, BoardId: currentBoard.Id});
+    actionInfos.push({ Name: lastActionName, Date: new Date(), Id: lastActionId, ListId: lastActionList && lastActionList.id, BoardId: currentBoard.Id });
 
     var currentDate = createDate;
     for (var i = 0; i < actionInfos.length; ++i) {
