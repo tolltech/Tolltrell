@@ -1,6 +1,14 @@
 var boards = {};
 async function GetBoard(boardId) {
-    return boards[boardId] || (boards[boardId] = await window.Trello.get('/boards/' + boardId));
+    try {
+        return boards[boardId] || (boards[boardId] = await window.Trello.get('/boards/' + boardId));
+    }
+    catch (err) {
+        if (err && err.status == 404) {
+            return null;
+        }
+        throw err;
+    }
 }
 
 var lists = {};
@@ -10,8 +18,17 @@ async function GetList(listId) {
 
 var boardsMovingActions = {};
 async function GetBoardsMovingActions(cardId, boardId) {
-    var allActions = boardsMovingActions[boardId] || (boardsMovingActions[boardId] = await GetBoardMovingActionsByCard(boardId));
-    return allActions.filter(x => x.data.card && x.data.card.id == cardId);
+    try {
+        var allActions = boardsMovingActions[boardId] || (boardsMovingActions[boardId] = await GetBoardMovingActionsByCard(boardId));
+        return allActions.filter(x => x.data.card && x.data.card.id == cardId);
+    }
+    catch (err) {
+        if (err && err.status == 404) {
+            console.log('Error while get actions for board ' + boardId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        throw err;
+    }
 }
 
 var cardsChangingActionsCache = {};
@@ -29,13 +46,14 @@ async function BuildActionInfosByCard(card) {
     otherBoardIds = distinct(otherBoardIds);
 
     for (var i = 0; i < otherBoardIds.length; ++i) {
-        try {
-            var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
-            actions = actions.concat(boardActions)
-        } catch (err) {
-            console.log('Error while get actions for board ' + otherBoardIds[i] + ' Error ' + JSON.stringify(err));
-            console.log('Actions ' + JSON.stringify(actions));
+        var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
+
+        if (boardActions.length == 0) {
+            console.log('Found 0 board actions for board ' + otherBoardIds[i]);
+            console.log('SourceActions ' + JSON.stringify(actions));
         }
+
+        actions = actions.concat(boardActions)
     }
 
     if (actions.length <= 0) {
@@ -86,7 +104,7 @@ async function BuildActionInfosByCard(card) {
             }
 
             var board = boardId && await GetBoard(boardId);
-            actionInfo.Board = board && board.name || 'Unknown board';
+            actionInfo.Board = board && board.name || 'Unknown board ' + boardId;
             actionInfo.BoardId = boardId;
         } else if (action.type == 'moveCardFromBoard') {
             continue;
