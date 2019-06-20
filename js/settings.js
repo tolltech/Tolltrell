@@ -37,15 +37,13 @@ t.render(async function () {
         return;
     }
 
-    console.log('Rendering popup for card ' + cardId);
-
     var card = await window.Trello.get('/cards/' + cardId);
-    if (!card || !card.idBoard || !card.idList) {
+    if (!card || !card.idBoard) {
         console.log('Cant get boardId or listId for card ' + cardId);
         return;
     }
 
-    var actionInfos = await BuildActionInfosByCard(card);
+    var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);
     var nameByIds = toDict(actionInfos, x => x.Id, x => x.Name);
     var sumActionInfos = sumDays(actionInfos);
     //todo: спрятать внутрь sumDays
@@ -75,6 +73,4 @@ t.render(async function () {
 
     AddTable(sumActionInfos, 'cardLifestyleSum');
     AddTable(actionInfos, 'cardLifestyle');
-
-    console.log('Rendered popup for card ' + cardId);
 });

@@ -69,12 +69,11 @@ function getActionInfo(prevAction, date) {
     return actionInfo;
 }
 
-async function BuildActionInfosByCard(card) {
-    var cardId = card.id;
+async function BuildActionInfosByCard(cardId, boardId) {
     var actions = await GetCardChangingActionsCached(cardId);
 
     var otherBoardIds = actions
-        .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != card.idBoard)
+        .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != boardId)
         .map(x => x.data.boardSource.id);
     otherBoardIds = distinct(otherBoardIds);
 

@@ -52,8 +52,10 @@ var getReport = async function (t) {
   console.log('Generating report for board ' + boardId);
 
   var boardActions = await GetBoardCardActions(boardId);
-  var cardIds = boardActions.filter(x => x.data.card).map(x => x.data.card.id);
+  var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
+  var cardIds = cards.map(x => x.id);
   cardIds = distinct(cardIds);
+  var cardNamesByIds = toDict(cards, x => x.id, x => x.name);
 
   var actionsByCard = {};
   var nameIds = [];
@@ -61,12 +63,11 @@ var getReport = async function (t) {
   var actionInfoByIds = {};
   for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
-    var card = await window.Trello.get('/cards/' + cardId);
-    var actions = await BuildActionInfosByCard(card);
+    var actions = await BuildActionInfosByCard(cardId, boardId);
 
     actionsByCard[cardId] = {};
     actionsByCard[cardId].Actions = actions;
-    actionsByCard[cardId].Card = card;
+    actionsByCard[cardId].CardName = cardNamesByIds[cardId] || 'Unknown card' + cardId;
 
     for (var j = 0; j < actions.length; ++j) {
       nameByIds[actions[j].Id] = actions[j].Name;
@@ -107,9 +108,9 @@ var getReport = async function (t) {
 
     var cardDaysById = sumDays(cardActions.Actions);
 
-    rows.push([cardActions.Card.name].concat(actionIdsHeaderRow.map(x => cardDaysById[x] === undefined 
-      ? 0 
-      : ('' + cardDaysById[x]).replace(/\./g,',') )));
+    rows.push([cardActions.CardName].concat(actionIdsHeaderRow.map(x => cardDaysById[x] === undefined
+      ? 0
+      : ('' + cardDaysById[x]).replace(/\./g, ','))));
   }
 
   var now = new Date();

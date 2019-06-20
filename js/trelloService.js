@@ -25,7 +25,3 @@ async function GetCardChangingActions(cardId) {
 async function GetBoardCardActions(boardId) {
   return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000');
 }
-
-async function GetAllCardActions(cardId) {
-  return await window.Trello.get('/cards/' + cardId + '/actions?filter=all&limit=1000');
-}
