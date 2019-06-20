@@ -23,12 +23,7 @@ async function GetCardChangingActions(cardId) {
 }
 
 async function GetBoardCardActions(boardId) {
-  var actions = [];
-  for (var i = 0; i < 10; ++i) {
-    actions.push(await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000&page=' + i));
-  }
-
-  return actions;
+  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000');
 }
 
 async function GetAllCardActions(cardId) {
