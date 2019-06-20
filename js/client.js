@@ -13,17 +13,9 @@ function intToString(num, size) {
 
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
-  try {
-    var boardId = await t.board('id').get('id');
-    console.log('BoardId' + boardId);
-  }
-  catch (e) {
-    console.log(JSON.stringify(e));
-  }
-
-  var cardInfo = await window.Trello.get('/cards/' + cardId);
-  var actions = await GetBoardsMovingActions(cardId, cardInfo.idBoard);
-  var lastAction = actions.length > 0 ? actions[0] : null;   
+  var boardId = await t.board('id').get('id');
+  var actions = await GetBoardsMovingActions(cardId, boardId);
+  var lastAction = actions.length > 0 ? actions[0] : null;
 
   var lastDate = lastAction ? new Date(lastAction.date) : new Date();
   var listTimeMiliseconds = new Date() - lastDate;
