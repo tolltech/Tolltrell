@@ -13,22 +13,19 @@ function intToString(num, size) {
 
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
-
-  var cardInfo = await window.Trello.get('/cards/' + cardId);
-
-  var actions = await GetCardChangingActionsCached(cardId);
-  var lastListAction = actions.find(x => x.data && x.data.listAfter);
-  var moveToBoardAction = actions.find(x => x.type == 'moveCardToBoard');
-  var createCardAction = actions.reverse().find(x => x.type = 'createCard');
-  //todo: выделить в ДДД класс работу с датами
-  var createCardOrBoardAction = moveToBoardAction || createCardAction;
-
-  if (!lastListAction && !createCardOrBoardAction) {
-    console.log('No list changing or createCard action for ' + cardInfo.name);
-    return [];
+  try {
+    var boardId = await t.board('id').get('id');
+    console.log('BoardId' + boardId);
+  }
+  catch (e) {
+    console.log(JSON.stringify(e));
   }
 
-  var lastDate = lastListAction ? new Date(lastListAction.date) : new Date(createCardOrBoardAction.date);
+  var cardInfo = await window.Trello.get('/cards/' + cardId);
+  var actions = await GetBoardsMovingActions(cardId, cardInfo.idBoard);
+  var lastAction = actions.length > 0 ? actions[0] : null;   
+
+  var lastDate = lastAction ? new Date(lastAction.date) : new Date();
   var listTimeMiliseconds = new Date() - lastDate;
   var listTimeDays = Math.floor(listTimeMiliseconds / (1000 * 60 * 60 * 24));
 

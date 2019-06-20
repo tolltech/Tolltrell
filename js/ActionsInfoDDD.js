@@ -31,11 +31,6 @@ async function GetBoardsMovingActions(cardId, boardId) {
     }
 }
 
-var cardsChangingActionsCache = {};
-async function GetCardChangingActionsCached(cardId) {
-    return cardsChangingActionsCache[cardId] || (cardsChangingActionsCache[cardId] = await GetCardChangingActions(cardId));
-}
-
 function getListFromAction(action) {
     var actionList = action.data.listAfter || action.data.list;
     var listName = actionList && actionList.name;
@@ -70,7 +65,7 @@ function getActionInfo(prevAction, date) {
 }
 
 async function BuildActionInfosByCard(cardId, boardId) {
-    var actions = await GetCardChangingActionsCached(cardId);
+    var actions = await GetBoardsMovingActions(cardId, boardId);
 
     var otherBoardIds = actions
         .filter(x => x.type == 'moveCardToBoard' && x.data.boardSource && x.data.boardSource.id != boardId)
