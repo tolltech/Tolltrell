@@ -36,6 +36,13 @@ async function GetCardChangingActionsCached(cardId) {
     return cardsChangingActionsCache[cardId] || (cardsChangingActionsCache[cardId] = await GetCardChangingActions(cardId));
 }
 
+function getListFromAction(action) {
+    var actionList = action.data.listAfter || action.data.list;
+    var listName = actionList && actionList.name;
+    var listId = actionList && actionList.id;
+    return { Name: listName, Id: listId };
+}
+
 async function BuildActionInfosByCard(card) {
     var cardId = card.id;
     var actions = await GetCardChangingActionsCached(cardId);
@@ -62,19 +69,12 @@ async function BuildActionInfosByCard(card) {
 
     sortBy(actions, x => new Date(x.date));
 
-    var createAction = actions.find(x => x.type == 'createCard')
-        || actions[0];
-    if (!createAction) {
-        console.log('Cant get createAction for card ' + cardId);
-        return [];
-    }
-
+    var createAction = actions[0];
     var createDate = new Date(createAction.date);
-
     var currentBoard = await GetBoard(card.idBoard);
 
     var actionInfos = [];
-    for (var i = 0; i < actions.length; ++i) {
+    for (var i = 1; i < actions.length; ++i) {
         var action = actions[i];
         if (!action.date || !action.data || action.id == createAction.id) {
             continue;
@@ -88,20 +88,15 @@ async function BuildActionInfosByCard(card) {
             actionInfo.List = action.data.listBefore.name;
             actionInfo.ListId = action.data.listBefore.id;
         } else if (action.type == 'moveCardToBoard') {
-            var boardId = action.data.boardSource.id;
-            //карту сдвинули с "текущей" доски, должны узнать ее лист
-            if (boardId == currentBoard.id && i > 0) {
-                var prevAction = actions[i - 1];
-                var list = prevAction.data.listAfter || prevAction.data.list;
-                actionInfo.List = list && list.name;
-                actionInfo.ListId = list && list.id;
-            }
+            var prevAction = actions[i - 1];
+            var prevActionList = getListFromAction(prevAction);
+            actionInfo.List = prevActionList.Name;
+            actionInfo.ListId = prevActionList.Id;
 
+            var boardId = action.data.boardSource.id;
             var board = boardId && await GetBoard(boardId);
             actionInfo.Board = board && board.name || 'Unknown board ' + boardId;
             actionInfo.BoardId = boardId;
-        } else if (action.type == 'moveCardFromBoard') {
-            continue;
         }
         else {
             continue;
@@ -113,11 +108,10 @@ async function BuildActionInfosByCard(card) {
     }
 
     var lastAction = actions[actions.length - 1];
-    var lastActionList = lastAction.data.listAfter || lastAction.data.list;
-    var lastActionName = (lastActionList && lastActionList.name)
-        || currentBoard.name;
-    var lastActionId = (lastActionList && lastActionList.id)
-        || currentBoard.id;
+    var lastList = getListFromAction(lastAction);
+
+    var lastActionName = lastList.Name || currentBoard.name;
+    var lastActionId = lastList.Id || currentBoard.id;
 
     actionInfos.push({ Name: lastActionName, Date: new Date(), Id: lastActionId, ListId: lastActionList && lastActionList.id, BoardId: currentBoard.Id });
 
