@@ -19,7 +19,7 @@ async function GetList(listId) {
 var boardsMovingActions = {};
 async function GetBoardsMovingActions(cardId, boardId) {
     try {
-        var allActions = boardsMovingActions[boardId] || (boardsMovingActions[boardId] = await GetBoardMovingActionsByCard(boardId));
+        var allActions = boardsMovingActions[boardId] || (boardsMovingActions[boardId] = await GetBoardCardActions(boardId));
         return allActions.filter(x => x.data.card && x.data.card.id == cardId);
     }
     catch (err) {
@@ -43,6 +43,32 @@ function getListFromAction(action) {
     return { Name: listName, Id: listId };
 }
 
+function getBoardFromAction(action) {
+    var actionBoard = action.data.board;
+    var boardName = actionBoard && actionBoard.name;
+    var boardId = actionBoard && actionBoard.id;
+    return { Name: boardName, Id: boardId };
+}
+
+function getActionInfo(prevAction, date) {
+    var actionInfo = {
+        Date: new Date(date)
+    };
+
+    var prevActionList = getListFromAction(prevAction);
+    actionInfo.List = prevActionList.Name;
+    actionInfo.ListId = prevActionList.Id;
+
+    var prevActionBoard = getBoardFromAction(prevAction);
+    actionInfo.Board = prevActionBoard.Name || 'Unknown board ' + prevActionBoard.Id;
+    actionInfo.BoardId = prevActionBoard.Id;
+
+    actionInfo.Name = actionInfo.List || actionInfo.Board;
+    actionInfo.Id = actionInfo.ListId || actionInfo.BoardId;
+
+    return actionInfo;
+}
+
 async function BuildActionInfosByCard(card) {
     var cardId = card.id;
     var actions = await GetCardChangingActionsCached(cardId);
@@ -54,12 +80,6 @@ async function BuildActionInfosByCard(card) {
 
     for (var i = 0; i < otherBoardIds.length; ++i) {
         var boardActions = await GetBoardsMovingActions(cardId, otherBoardIds[i]);
-
-        if (boardActions.length == 0) {
-            console.log('Found 0 board actions for board ' + otherBoardIds[i]);
-            console.log('SourceActions ' + JSON.stringify(actions));
-        }
-
         actions = actions.concat(boardActions)
     }
 
@@ -69,53 +89,23 @@ async function BuildActionInfosByCard(card) {
 
     sortBy(actions, x => new Date(x.date));
 
-    var createAction = actions[0];
-    var createDate = new Date(createAction.date);
-    var currentBoard = await GetBoard(card.idBoard);
+    var firstAction = actions[0];
+    var fisrstActionDate = new Date(firstAction.date);
 
     var actionInfos = [];
     for (var i = 1; i < actions.length; ++i) {
         var action = actions[i];
-        if (!action.date || !action.data || action.id == createAction.id) {
-            continue;
-        }
+        var prevAction = actions[i - 1];
 
-        var actionInfo = {
-            Date: new Date(action.date)
-        };
-
-        if (action.type == 'updateCard' && action.data.listBefore) {
-            actionInfo.List = action.data.listBefore.name;
-            actionInfo.ListId = action.data.listBefore.id;
-        } else if (action.type == 'moveCardToBoard') {
-            var prevAction = actions[i - 1];
-            var prevActionList = getListFromAction(prevAction);
-            actionInfo.List = prevActionList.Name;
-            actionInfo.ListId = prevActionList.Id;
-
-            var boardId = action.data.boardSource.id;
-            var board = boardId && await GetBoard(boardId);
-            actionInfo.Board = board && board.name || 'Unknown board ' + boardId;
-            actionInfo.BoardId = boardId;
-        }
-        else {
-            continue;
-        }
-
-        actionInfo.Name = actionInfo.List || actionInfo.Board;
-        actionInfo.Id = actionInfo.ListId || actionInfo.BoardId;
+        var actionInfo = getActionInfo(prevAction, action.date);
         actionInfos.push(actionInfo);
     }
 
     var lastAction = actions[actions.length - 1];
-    var lastList = getListFromAction(lastAction);
+    var lastActionInfo = getActionInfo(lastAction, new Date());
+    actionInfos.push(lastActionInfo);
 
-    var lastActionName = lastList.Name || currentBoard.name;
-    var lastActionId = lastList.Id || currentBoard.id;
-
-    actionInfos.push({ Name: lastActionName, Date: new Date(), Id: lastActionId, ListId: lastActionList && lastActionList.id, BoardId: currentBoard.Id });
-
-    var currentDate = createDate;
+    var currentDate = fisrstActionDate;
     for (var i = 0; i < actionInfos.length; ++i) {
         var delta = actionInfos[i].Date - currentDate;
         var deltaDays = delta / (1000.0 * 60 * 60 * 24);

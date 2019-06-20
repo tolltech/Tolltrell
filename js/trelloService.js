@@ -22,12 +22,13 @@ async function GetCardChangingActions(cardId) {
   return await window.Trello.get('/cards/' + cardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000');
 }
 
-async function GetBoardMovingActionsByCard(boardId) {
-  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard&limit=1000');
-}
-
 async function GetBoardCardActions(boardId) {
-  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000');
+  var actions = [];
+  for (var i = 0; i < 10; ++i) {
+    actions.push(await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList&limit=1000&page=' + i));
+  }
+
+  return actions;
 }
 
 async function GetAllCardActions(cardId) {
