@@ -18,3 +18,13 @@ function toDict(array, getKey, getValue){
         return map;
       }, {});
 }
+
+function sortBy(array, getKey){
+    array.sort(function (a, b) {
+        var keyA = getKey(a),
+            keyB = getKey(b);
+        if (keyA < keyB) return -1;
+        if (keyA > keyB) return 1;
+        return 0;
+    });
+}

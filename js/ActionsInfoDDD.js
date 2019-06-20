@@ -60,13 +60,7 @@ async function BuildActionInfosByCard(card) {
         return [];
     }
 
-    actions.sort(function (a, b) {
-        var keyA = new Date(a.date),
-            keyB = new Date(b.date);
-        if (keyA < keyB) return -1;
-        if (keyA > keyB) return 1;
-        return 0;
-    });
+    sortBy(actions, x => new Date(x.date));
 
     var createAction = actions.find(x => x.type == 'createCard')
         || actions[0];
