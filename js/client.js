@@ -58,6 +58,7 @@ var getReport = async function (t) {
   var actionsByCard = {};
   var nameIds = [];
   var nameByIds = {};
+  var actionInfoByIds = {};
   for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
     var card = await window.Trello.get('/cards/' + cardId);
@@ -69,15 +70,36 @@ var getReport = async function (t) {
 
     for (var j = 0; j < actions.length; ++j) {
       nameByIds[actions[j].Id] = actions[j].Name;
+      actionInfoByIds[actions[j].Id] = actions[j];
       nameIds.push(actions[j].Id);
     }
   }
 
-  var headerRow = distinct(nameIds);
+  var actionIdsHeaderRow = distinct(nameIds);
 
   var rows = [];
   //header = 'Card, ... actions
-  rows.push(['Card'].concat(headerRow.map(x => nameByIds[x])));
+  rows.push(['TrelloList'].concat(actionIdsHeaderRow.map(x => nameByIds[x])));
+
+  var boardNamesRow = [];
+  for (var i = 0; i < actionIdsHeaderRow.length; ++i) {
+    var actionInfoId = actionIdsHeaderRow[i];
+    var actionInfo = actionInfoByIds[actionInfoId];
+    var boardName;
+    if (actionInfo.Board) {
+      boardName = actionInfo.Board;
+    }
+    else if (actionInfo.ListId) {
+      var list = await GetList(actionInfo.ListId);
+      if (list.idBoard) {
+        var board = await GetBoard(list.idBoard);
+        boardName = board && board.name;
+      }
+    }
+    boardNamesRow.push(boardName || 'Unknown board')
+  }
+
+  rows.push(['TrelloBoard'].concat(boardNamesRow));
 
   for (var i = 0; i < cardIds.length; ++i) {
     var cardId = cardIds[i];
@@ -85,7 +107,7 @@ var getReport = async function (t) {
 
     var cardDaysById = sumDays(cardActions.Actions);
 
-    rows.push([cardActions.Card.name].concat(headerRow.map(x => cardDaysById[x] === undefined ? 0 : cardDaysById[x])));
+    rows.push([cardActions.Card.name].concat(actionIdsHeaderRow.map(x => cardDaysById[x] === undefined ? 0 : cardDaysById[x])));
   }
 
   var now = new Date();
