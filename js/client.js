@@ -39,7 +39,7 @@ var getCardReport = async function (t) {
   var boardId = await t.board('id').get('id');
   var boardActions = await GetBoardCardActions(boardId);
 
-  var rows = await GetCardDetailReport(boardActions);
+  var rows = await GetCardDetailReport(boardActions, boardId);
 
   var now = new Date();
   var board = await window.Trello.get('/boards/' + boardId);
