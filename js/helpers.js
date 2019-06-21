@@ -34,3 +34,16 @@ function dateToSortableString(date){
     + intToString(date.getMonth() + 1) + '-'
     + intToString(date.getDate());
 }
+
+function addDays(date, daysCount){
+    date.setDate(date.getDate() + daysCount);
+}
+
+function getArrayFromMap(s){
+    Object.entries(s).map(function (x) {
+        var s2 = {};
+        s2.Key = x[0];
+        s2.Value = x[1];
+        return s2;
+    });
+}
