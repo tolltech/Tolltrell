@@ -28,3 +28,9 @@ function sortBy(array, getKey){
         return 0;
     });
 }
+
+function dateToSortableString(date){
+    return date.getFullYear() + '-'
+    + intToString(date.getMonth() + 1) + '-'
+    + intToString(date.getDate());
+}
