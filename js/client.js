@@ -23,7 +23,7 @@ var getBadges = async function (t) {
 
   return [{
     title: 'Days',
-    text: listTimeDays,
+    text: '' + listTimeDays,
     icon: TOLLTECHER_ICON,
     callback: function (context) {
       return context.popup({
