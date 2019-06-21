@@ -1,4 +1,4 @@
-async function GetCardDetailReport(boardActions) {
+async function GetCardDetailReport(boardActions, boardId) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);
     cardIds = distinct(cardIds);
