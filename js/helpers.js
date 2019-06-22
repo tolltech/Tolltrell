@@ -40,7 +40,7 @@ function addDays(date, daysCount){
 }
 
 function getArrayFromMap(s){
-    Object.entries(s).map(function (x) {
+    return Object.entries(s).map(function (x) {
         var s2 = {};
         s2.Key = x[0];
         s2.Value = x[1];
