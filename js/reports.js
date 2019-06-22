@@ -83,7 +83,7 @@ async function GetListDetailReport(boardActions, boardId) {
     }
     dateSnapshots[nowStr] = snapshot;
 
-    var listIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.listId).map(x => x.data.list.id));
+    var listIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
 
     for (var i = 0; i < listIds.length; ++i) {
         var listId = listIds[i];
