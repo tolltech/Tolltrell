@@ -85,8 +85,7 @@ async function GetListDetailReport(boardActions, boardId) {
     }
     dateSnapshots.push({ Day: nowStr, Snapshot: snapshot });
 
-    sortBy(boardActions, x => -new Date(x.date).getTime());
-    for (var i = boardActions.length - 1; i >= 0; --i) {
+    for (var i = 0; i < boardActions.length; ++i) {
         var action = boardActions[i];
         var lastSnapshot = dateSnapshots[dateSnapshots.length - 1];
 
@@ -105,7 +104,7 @@ async function GetListDetailReport(boardActions, boardId) {
         else {
             var newSnapshot = { Cards: cloneObject(lastSnapshot.Snapshot.Cards) };
 
-            newSnapshot.Snapshot.Cards[cardId] = { ListId: listId };
+            newSnapshot.Cards[cardId] = { ListId: listId };
 
             dateSnapshots.push({ Day: actionDateStr, Snapshot: newSnapshot });
         }
