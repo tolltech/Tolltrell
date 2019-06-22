@@ -63,44 +63,47 @@ async function GetCardDetailReport(boardActions, boardId) {
     return rows;
 }
 
-async function GetListDetailReport(boardActions) {
+async function GetListDetailReport(boardActions, boardId) {
+    var lists = await GetBoardLists(boardId);
 
-    sortBy(boardActions, x => new Date(x.date));
+    var listByIds = {};
+    var dateSnapshots = {};
+    var now = new Date();
+    var nowStr = dateToSortableString(now);
 
-    var firstAction = boardActions[0];
-    var currentDate = new Date(firstAction.date);
-    addDays(currentDate, 1);
-
-    var days = {};
-    var currentActions = [];
-    for (var i = 0; i < boardActions.length; ++i) {
-        var action = boardActions[i];
-        var date = new Date(action.date);
-        if (date <= currentDate) {
-            currentActions.push(action);
-            continue;
+    var snapshot = { Cards: {} };
+    for (var i = 0; i < lists.length; ++i) {
+        var list = lists[i];
+        listByIds[list.id] = list.name;
+        var cards = list.cards || [];
+        for (var j = 0; j < cards.length; ++k) {
+            var card = cards[j];
+            snapshot.Cards[card.id] = { ListId: card.list.id };
         }
-
-        var currentDateStr = dateToSortableString(currentDate);
-        days[currentDateStr] = currentActions.map(x => x);
-
-        addDays(currentDate, 1);
-        currentActions = [];
     }
-
-    if (currentActions.length > 0) {
-        var currentDateStr = dateToSortableString(currentDate);
-        days[currentDateStr] = currentActions.map(x => x);
-    }
+    dateSnapshots[nowStr] = snapshot;
 
     var listIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.listId).map(x => x.data.list.id));
 
+    for (var i = 0; i < listIds.length; ++i) {
+        var listId = listIds[i];
+        if (listByIds[listId]) {
+            continue;
+        }
+
+        var list = await GetList(listId);
+        listByIds[listId] = list.name;
+    }
+
     var rows = [];
     rows.push(['TrelloList'].concat(listIds.map(x => x)));
-    var daysArray = getArrayFromMap(days);
-    for (var i = 0; i < daysArray.length; ++i) {
-        var dayRow = daysArray[i];
-        rows.push([dayRow.Key].concat(listIds.map(listId => dayRow.Value.filter(x => x.data && x.data.list && x.data.list.id == listId).length)));
+    var snapshots = getArrayFromMap(dateSnapshots);
+    for (var i = 0; i < snapshots.length; ++i) {
+        var snapshot = snapshots[i];
+        var snapshotCards = getArrayFromMap(snapshot.Value.Cards);
+        rows.push([snapshot.Key].concat(listIds.map(function (listId) {
+            return snapshotCards.filter(x => x.Value.ListId == listId).length;
+        })));
     }
     return rows;
 }
