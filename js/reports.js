@@ -72,8 +72,10 @@ async function GetListDetailReport(boardActions, boardId) {
     var nowStr = dateToSortableString(now);
 
     var snapshot = { Cards: {} };
+    var listIds = [];
     for (var i = 0; i < lists.length; ++i) {
         var list = lists[i];
+        listIds.push(list.id);
         listNameByIds[list.id] = list.name;
         var cards = list.cards || [];
         for (var j = 0; j < cards.length; ++j) {
@@ -83,7 +85,8 @@ async function GetListDetailReport(boardActions, boardId) {
     }
     dateSnapshots[nowStr] = snapshot;
 
-    var listIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
+    var otherListIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
+    listIds = distinct(listIds.concat(otherListIds));
 
     for (var i = 0; i < listIds.length; ++i) {
         var listId = listIds[i];
