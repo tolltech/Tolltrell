@@ -119,8 +119,8 @@ async function GetListDetailReport(boardActions, boardId) {
             continue;
         }
 
-        var list = await GetList(listId);
-        listNameByIds[listId] = list.name;
+        var list = await GetTrelloList(listId);
+        listNameByIds[listId] = (list && list.name) || 'UnknownList ' + listId;
     }
 
     sortBy(dateSnapshots, x => x.Day);

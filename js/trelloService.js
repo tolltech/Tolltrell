@@ -26,6 +26,14 @@ async function GetBoardLists(boardId) {
   return await window.Trello.get('/boards/' + boardId + '/lists?cards=open');
 }
 
-async function GetList(listId) {
-  return await window.Trello.get('/lists/' + listId);
+async function GetTrelloList(listId) {
+  try {
+    return await window.Trello.get('/lists/' + listId);
+  }
+  catch (err) {
+    if (err && err.status == 404) {
+      return null;
+    }
+    throw err;
+  }
 }
