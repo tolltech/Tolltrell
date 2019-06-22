@@ -85,6 +85,32 @@ async function GetListDetailReport(boardActions, boardId) {
     }
     dateSnapshots.push({ Day: nowStr, Snapshot: snapshot });
 
+    sortBy(boardActions, x => -new Date(x.date).getTime());
+    for (var i = boardActions.length - 1; i >= 0; --i) {
+        var action = boardActions[i];
+        var lastSnapshot = dateSnapshots[dateSnapshots.length - 1];
+
+        var cardId = action.data.card.id;
+        var listId = (action.data.listAfter && action.data.listAfter.id)
+            || (action.data.list && action.data.list.id);
+
+        if (!listId) {
+            console.log('Cant determine list for action ' + JSON.stringify(action));
+        }
+
+        var actionDateStr = dateToSortableString(new Date(action.date));
+        if (actionDateStr == lastSnapshot.Day) {
+            lastSnapshot.Snapshot.Cards[cardId] = { ListId: listId };
+        }
+        else {
+            var newSnapshot = { Cards: cloneObject(lastSnapshot.Snapshot.Cards) };
+
+            newSnapshot.Snapshot.Cards[cardId] = { ListId: listId };
+
+            dateSnapshots.push({ Day: actionDateStr, Snapshot: newSnapshot });
+        }
+    }
+
     var otherListIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
     listIds = distinct(listIds.concat(otherListIds));
 
@@ -98,6 +124,7 @@ async function GetListDetailReport(boardActions, boardId) {
         listNameByIds[listId] = list.name;
     }
 
+    sortBy(dateSnapshots, x => x.Day);
     var rows = [];
     rows.push(['TrelloList'].concat(listIds.map(x => listNameByIds[x] || ('UnknownList' + x))));
     for (var i = 0; i < dateSnapshots.length; ++i) {
