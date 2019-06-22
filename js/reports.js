@@ -67,7 +67,7 @@ async function GetListDetailReport(boardActions, boardId) {
     var lists = await GetBoardLists(boardId);
 
     var listNameByIds = {};
-    var dateSnapshots = {};
+    var dateSnapshots = [];
     var now = new Date();
     var nowStr = dateToSortableString(now);
 
@@ -83,7 +83,7 @@ async function GetListDetailReport(boardActions, boardId) {
             snapshot.Cards[card.id] = { ListId: card.idList };
         }
     }
-    dateSnapshots[nowStr] = snapshot;
+    dateSnapshots.push({ Day: nowStr, Snapshot: snapshot });
 
     var otherListIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
     listIds = distinct(listIds.concat(otherListIds));
@@ -100,11 +100,10 @@ async function GetListDetailReport(boardActions, boardId) {
 
     var rows = [];
     rows.push(['TrelloList'].concat(listIds.map(x => listNameByIds[x] || ('UnknownList' + x))));
-    var snapshots = getArrayFromMap(dateSnapshots);
-    for (var i = 0; i < snapshots.length; ++i) {
-        var snapshot = snapshots[i];
-        var snapshotCards = getArrayFromMap(snapshot.Value.Cards);
-        rows.push([snapshot.Key].concat(listIds.map(function (listId) {
+    for (var i = 0; i < dateSnapshots.length; ++i) {
+        var snapshot = dateSnapshots[i];
+        var snapshotCards = getArrayFromMap(snapshot.Snapshot.Cards);
+        rows.push([snapshot.Day].concat(listIds.map(function (listId) {
             return snapshotCards.filter(x => x.Value.ListId == listId).length;
         })));
     }
