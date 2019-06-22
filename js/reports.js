@@ -76,7 +76,7 @@ async function GetListDetailReport(boardActions, boardId) {
         var list = lists[i];
         listByIds[list.id] = list.name;
         var cards = list.cards || [];
-        for (var j = 0; j < cards.length; ++k) {
+        for (var j = 0; j < cards.length; ++j) {
             var card = cards[j];
             snapshot.Cards[card.id] = { ListId: card.list.id };
         }
