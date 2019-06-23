@@ -41,7 +41,7 @@ var getListReport = async function (t) {
 var boardButtonCallback = async function (t) {
   var boardId = await t.board('id').get('id');
   return t.popup({
-    title: 'TollReports',
+    title: 'Reports',
     url: './reports.html?boardId=' + boardId,
     height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
   });
@@ -70,7 +70,7 @@ TrelloPowerUp.initialize({
       }
     }, {
       icon: TOLLTECHER_ICON,
-      text: 'Test',
+      text: 'Toll Reports',
       callback: function (t, options) {
         return boardButtonCallback(t);
       }
