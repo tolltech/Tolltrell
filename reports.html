@@ -1,34 +1,44 @@
 <html>
+
 <head>
     <link rel="stylesheet" href="https://p.trellocdn.com/power-up.min.css">
     <script src="https://p.trellocdn.com/power-up.min.js"></script>
 </head>
+
 <body>
-<div id="content">
-    <p>Shared - Select a fruit</p>
-    <select id="fruit">
-        <option value="apple">Apple</option>
-        <option value="banana">Banana</option>
-        <option value="date">Date</option>
-        <option value="lemon">Lemon</option>
-        <option value="pineapple">Pineapple</option>
-    </select>
-    <p>Private - Select a vegetable</p>
-    <select id="vegetable">
-        <option value="broccoli">Broccoli</option>
-        <option value="corn">Corn</option>
-        <option value="kale">Kale</option>
-        <option value="onion">Onion</option>
-        <option value="spinach">Spinach</option>
-    </select>
-    <button id="save" class="mod-primary">Save</button>
-</div>
-<script src="https://trello.com/1/client.js?key=9b4a96d318dd1d5e851440173c2074fc"></script>
-<script src="./js/helpers.js"></script>
-<script src="./js/trelloService.js"></script>
-<script src="./js/ActionsInfoDDD.js"></script>
-<script src="./js/csvGenerator.js"></script>
-<script src="./js/reports.js"></script>
-<script src="./js/reportsHtml.js"></script>
+    <div id="content">
+        <table>
+            <tr>
+                <td>
+                    <div id="cardReportIconId"><img src="images/icon.png"></div>
+                </td>
+                <td>
+                    <div> <button id="cardReportButton" class="mod-primary">Cards Report</button></div>
+                </td>
+                <td>
+                    <div id="cardErrorId"></div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div id="listReportIconId"><img src="images/icon.png"></div>
+                </td>
+                <td>
+                    <div> <button id="listReportButton" class="mod-primary">Lists Report</button></div>
+                </td>
+                <td>
+                    <div id="listErrorId"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <script src="https://trello.com/1/client.js?key=9b4a96d318dd1d5e851440173c2074fc"></script>
+    <script src="./js/helpers.js"></script>
+    <script src="./js/trelloService.js"></script>
+    <script src="./js/ActionsInfoDDD.js"></script>
+    <script src="./js/csvGenerator.js"></script>
+    <script src="./js/reports.js"></script>
+    <script src="./js/reportsHtml.js"></script>
 </body>
+
 </html>
