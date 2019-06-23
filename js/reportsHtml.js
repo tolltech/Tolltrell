@@ -12,7 +12,7 @@ document.getElementById('cardReportButton').addEventListener('click', async func
         console.log('Cant render popup without boardId');
         return;
     }
-    DownloadCardReport(boardId);
+    await DownloadCardReport(boardId);
 });
 
 document.getElementById('listReportButton').addEventListener('click', async function () {
@@ -22,5 +22,5 @@ document.getElementById('listReportButton').addEventListener('click', async func
         console.log('Cant render popup without boardId');
         return;
     }
-    DownloadListReport(boardId);
+    await DownloadListReport(boardId);
 });
