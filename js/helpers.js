@@ -58,3 +58,14 @@ function getArrayFromMap(s) {
 function cloneObject(o) {
     return JSON.parse(JSON.stringify(o));
 }
+
+function GetUrlParam(partamName) {
+    var url = window.location.search.substring(1);
+    var urlParams = url.split('&');
+    for (var i = 0; i < urlParams.length; ++i) {
+        var name = urlParams[i].split('=');
+        if (name[0] == partamName) {
+            return name[1];
+        }
+    }
+}
