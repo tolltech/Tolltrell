@@ -139,7 +139,7 @@ async function GetListDetailReport(boardActions, boardId) {
         var list = await GetTrelloList(listId);
         listNameByIds[listId] = (list && list.name) || 'UnknownList ' + listId;
 
-        var board = await GetBoard(list.idBoard);
+        var board = list && list.idBoard && await GetBoard(list.idBoard);
         boardNameByListIds[listId] = (board && board.name) || '';
     }
 
