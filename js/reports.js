@@ -65,8 +65,10 @@ async function GetCardDetailReport(boardActions, boardId) {
 
 async function GetListDetailReport(boardActions, boardId) {
     var lists = await GetBoardLists(boardId);
+    var currentBoard = GetBoard(boardId);
 
     var listNameByIds = {};
+    var boardNameByListIds = {};
     var dateSnapshots = [];
     var now = new Date();
     var nowStr = dateToSortableString(now);
@@ -77,6 +79,7 @@ async function GetListDetailReport(boardActions, boardId) {
         var list = lists[i];
         listIds.push(list.id);
         listNameByIds[list.id] = list.name;
+        boardNameByListIds[list.id] = currentBoard.name;
         var cards = list.cards || [];
         for (var j = 0; j < cards.length; ++j) {
             var card = cards[j];
@@ -135,11 +138,19 @@ async function GetListDetailReport(boardActions, boardId) {
 
         var list = await GetTrelloList(listId);
         listNameByIds[listId] = (list && list.name) || 'UnknownList ' + listId;
+
+        var board = GetBoard(list.idBoard);
+        boardNameByListIds[listId] = (board && board.name) || '';
     }
 
     sortBy(dateSnapshots, x => x.Day);
     var rows = [];
-    rows.push(['TrelloList'].concat(listIds.map(x => listNameByIds[x] || ('UnknownList' + x))));
+    rows.push(['TrelloList']
+        .concat(listIds
+            .map(x => boardNameByListIds[x] + ' - ' + (listNameByIds[x] || ('UnknownList' + x)))
+        )
+    );
+
     for (var i = 0; i < dateSnapshots.length; ++i) {
         var snapshot = dateSnapshots[i];
         var snapshotCards = getArrayFromMap(snapshot.Snapshot.Cards);
