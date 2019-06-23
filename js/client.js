@@ -38,10 +38,10 @@ var getListReport = async function (t) {
   await DownloadListReport(boardId);
 };
 
-var boardButtonCallback = function (t) {
+var boardButtonCallback = async function (t) {
   var boardId = await t.board('id').get('id');
   return t.popup({
-    title: 'TestPopup',
+    title: 'TollReports',
     url: './reports.html?boardId=' + boardId,
     height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
   });
