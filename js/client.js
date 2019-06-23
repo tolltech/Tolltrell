@@ -4,13 +4,6 @@ var Promise = TrelloPowerUp.Promise;
 
 var TOLLTECHER_ICON = './images/icon.png';
 
-function intToString(num, size) {
-  var s = num + '';
-  size = size || 2;
-  while (s.length < size) s = '0' + s;
-  return s;
-}
-
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
   var boardId = await t.board('id').get('id');
@@ -37,30 +30,12 @@ var getBadges = async function (t) {
 
 var getCardReport = async function (t) {
   var boardId = await t.board('id').get('id');
-  var boardActions = await GetBoardCardActions(boardId);
-
-  var rows = await GetCardDetailReport(boardActions, boardId);
-
-  var now = new Date();
-  var board = await window.Trello.get('/boards/' + boardId);
-  var csvName = 'Cards_'
-    + dateToSortableString(now) + '_'
-    + board.name + '.csv';
-  DownloadCsv(rows, csvName);
+  await DownloadCardReport(boardId);
 };
 
 var getListReport = async function (t) {
   var boardId = await t.board('id').get('id');
-  var boardActions = await GetBoardCardActions(boardId);
-
-  var rows = await GetListDetailReport(boardActions, boardId);
-
-  var now = new Date();
-  var board = await window.Trello.get('/boards/' + boardId);
-  var csvName = 'Lists_'
-    + dateToSortableString(now) + '_'
-    + board.name + '.csv';
-  DownloadCsv(rows, csvName);
+  await DownloadListReport(boardId);
 };
 
 var boardButtonCallback = function (t) {

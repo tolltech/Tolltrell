@@ -29,6 +29,13 @@ function sortBy(array, getKey) {
     });
 }
 
+function intToString(num, size) {
+    var s = num + '';
+    size = size || 2;
+    while (s.length < size) s = '0' + s;
+    return s;
+  }
+
 function dateToSortableString(date) {
     return date.getFullYear() + '-'
         + intToString(date.getMonth() + 1) + '-'

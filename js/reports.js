@@ -1,3 +1,29 @@
+async function DownloadCardReport(boardId) {
+    var boardActions = await GetBoardCardActions(boardId);
+
+    var rows = await GetCardDetailReport(boardActions, boardId);
+
+    var now = new Date();
+    var board = await window.Trello.get('/boards/' + boardId);
+    var csvName = 'Cards_'
+        + dateToSortableString(now) + '_'
+        + board.name + '.csv';
+    DownloadCsv(rows, csvName);
+}
+
+async function DownloadListReport(boardId) {
+    var boardActions = await GetBoardCardActions(boardId);
+
+    var rows = await GetListDetailReport(boardActions, boardId);
+
+    var now = new Date();
+    var board = await window.Trello.get('/boards/' + boardId);
+    var csvName = 'Lists_'
+        + dateToSortableString(now) + '_'
+        + board.name + '.csv';
+    DownloadCsv(rows, csvName);
+}
+
 async function GetCardDetailReport(boardActions, boardId) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);
