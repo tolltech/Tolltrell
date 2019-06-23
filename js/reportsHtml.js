@@ -1,26 +1,51 @@
 var Promise = TrelloPowerUp.Promise;
 var t = TrelloPowerUp.iframe();
 
-t.render(async function () {
+var WHITE_ICON = 'images/icon.png';
+var GRAY_ICON = 'images/loader.gif';
+var RED_ICON = 'images/iconred.png';
+var GREEN_ICON = 'images/icongreen.png';
 
+var clearFunc = async function (prefix) {
+    var ico = $('#' + prefix + 'ReportIconId');
+    ico.attr('src', WHITE_ICON);
+    var errorDiv = $('#' + prefix + 'ErrorId');
+    errorDiv.html('');
+}
+
+t.render(async function () {
+    await clearFunc('card');
+    await clearFunc('list');
 });
 
-document.getElementById('cardReportButton').addEventListener('click', async function () {
+var downloadFunc = async function (prefix) {
     var boardId = GetUrlParam('boardId');
 
     if (!boardId) {
         console.log('Cant render popup without boardId');
         return;
     }
-    await DownloadCardReport(boardId);
+    try {
+        var ico = $('#' + prefix + 'ReportIconId');
+        ico.attr('src', GRAY_ICON);
+
+        await DownloadCardReport(boardId);
+    }
+    catch (err) {
+        ico.attr('src', RED_ICON);
+        var errorDiv = $('#' + prefix + 'ErrorId');
+        errorDiv.html(JSON.stringify(err));
+        return;
+    }
+
+    ico.attr('src', GREEN_ICON);
+    t.closePopup();
+}
+
+document.getElementById('cardReportButton').addEventListener('click', async function () {
+    await downloadFunc('card');
 });
 
 document.getElementById('listReportButton').addEventListener('click', async function () {
-    var boardId = GetUrlParam('boardId');
-
-    if (!boardId) {
-        console.log('Cant render popup without boardId');
-        return;
-    }
-    await DownloadListReport(boardId);
+    await downloadFunc('list');
 });
