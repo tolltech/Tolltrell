@@ -85,6 +85,7 @@ async function GetListDetailReport(boardActions, boardId) {
     }
     dateSnapshots.push({ Day: nowStr, Snapshot: snapshot });
 
+    var createdCardIdsThisDay = [];
     for (var i = 0; i < boardActions.length; ++i) {
         var action = boardActions[i];
         var lastSnapshot = dateSnapshots[dateSnapshots.length - 1];
@@ -106,7 +107,20 @@ async function GetListDetailReport(boardActions, boardId) {
 
             newSnapshot.Cards[cardId] = { ListId: listId };
 
+            if (createdCardIdsThisDay.indexOf(cardId) != -1) {
+                console.log('Card ' + action.data.card.name + ' was created at ' + lastSnapshot.Day + ', but appears at ' + actionDateStr);
+            }
+
+            for (var j = 0; j < createdCardIdsThisDay.length; ++j) {
+                var cId = createdCardIdsThisDay[j];
+                newSnapshot.Cards[cId] = { ListId: undefined };
+            }
+            createdCardIdsThisDay = [];
+
             dateSnapshots.push({ Day: actionDateStr, Snapshot: newSnapshot });
+        }
+        if (action.type == 'createCard') {
+            createdCardIdsThisDay.push(cardId);
         }
     }
 
@@ -130,7 +144,7 @@ async function GetListDetailReport(boardActions, boardId) {
         var snapshot = dateSnapshots[i];
         var snapshotCards = getArrayFromMap(snapshot.Snapshot.Cards);
         rows.push([snapshot.Day].concat(listIds.map(function (listId) {
-            return snapshotCards.filter(x => x.Value.ListId == listId).length;
+            return snapshotCards.filter(x => x.Value && x.Value.ListId == listId).length;
         })));
     }
     return rows;
