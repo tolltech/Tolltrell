@@ -63,6 +63,14 @@ var getListReport = async function (t) {
   DownloadCsv(rows, csvName);
 };
 
+var boardButtonCallback = function (t) {
+  return t.popup({
+    title: 'TestPopup',
+    url: './reports.html',
+    height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
+  });
+};
+
 TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
     return getBadges(t);
@@ -83,6 +91,12 @@ TrelloPowerUp.initialize({
       text: 'Lists Details',
       callback: function (t, options) {
         return getListReport(t);
+      }
+    },{
+      icon: TOLLTECHER_ICON,
+      text: 'Test',
+      callback: function (t, options) {
+        return boardButtonCallback(t);
       }
     }];
   },
