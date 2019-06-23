@@ -65,7 +65,7 @@ async function GetCardDetailReport(boardActions, boardId) {
 
 async function GetListDetailReport(boardActions, boardId) {
     var lists = await GetBoardLists(boardId);
-    var currentBoard = GetBoard(boardId);
+    var currentBoard = await GetBoard(boardId);
 
     var listNameByIds = {};
     var boardNameByListIds = {};
@@ -139,7 +139,7 @@ async function GetListDetailReport(boardActions, boardId) {
         var list = await GetTrelloList(listId);
         listNameByIds[listId] = (list && list.name) || 'UnknownList ' + listId;
 
-        var board = GetBoard(list.idBoard);
+        var board = await GetBoard(list.idBoard);
         boardNameByListIds[listId] = (board && board.name) || '';
     }
 
