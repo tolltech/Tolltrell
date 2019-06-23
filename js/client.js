@@ -56,19 +56,22 @@ TrelloPowerUp.initialize({
   },
 
   'board-buttons': function (t, options) {
-    return [{
-      icon: TOLLTECHER_ICON,
-      text: 'Cards Details',
-      callback: function (t, options) {
-        return getCardReport(t);
-      }
-    }, {
-      icon: TOLLTECHER_ICON,
-      text: 'Lists Details',
-      callback: function (t, options) {
-        return getListReport(t);
-      }
-    }, {
+    return [
+    //   {
+    //   icon: TOLLTECHER_ICON,
+    //   text: 'Cards Details',
+    //   callback: function (t, options) {
+    //     return getCardReport(t);
+    //   }
+    // }, 
+    // {
+    //   icon: TOLLTECHER_ICON,
+    //   text: 'Lists Details',
+    //   callback: function (t, options) {
+    //     return getListReport(t);
+    //   }
+    // }, 
+    {
       icon: TOLLTECHER_ICON,
       text: 'Toll Reports',
       callback: function (t, options) {
