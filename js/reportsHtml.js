@@ -18,7 +18,7 @@ t.render(async function () {
     await clearFunc('list');
 });
 
-var downloadFunc = async function (prefix, downloadInnerFunc) {
+var downloadFunc = async function (prefix) {
     var boardId = GetUrlParam('boardId');
 
     if (!boardId) {
@@ -29,7 +29,7 @@ var downloadFunc = async function (prefix, downloadInnerFunc) {
         var ico = $('#' + prefix + 'ReportIconId');
         ico.attr('src', GRAY_ICON);
 
-        await downloadInnerFunc(boardId);
+        await DownloadCardReport(boardId);
     }
     catch (err) {
         ico.attr('src', RED_ICON);
@@ -42,10 +42,10 @@ var downloadFunc = async function (prefix, downloadInnerFunc) {
     t.closePopup();
 }
 
-document.getElementById('cardReportButton', DownloadCardReport).addEventListener('click', async function () {
+document.getElementById('cardReportButton').addEventListener('click', async function () {
     await downloadFunc('card');
 });
 
-document.getElementById('listReportButton', DownloadListReport).addEventListener('click', async function () {
+document.getElementById('listReportButton').addEventListener('click', async function () {
     await downloadFunc('list');
 });
