@@ -29,7 +29,15 @@ var downloadFunc = async function (prefix) {
         var ico = $('#' + prefix + 'ReportIconId');
         ico.attr('src', GRAY_ICON);
 
-        await DownloadCardReport(boardId);
+        if (prefix == 'card') {
+            await DownloadCardReport(boardId);
+        }
+        else if (prefix == 'list') {
+            await DownloadListReport(boardId);
+        }
+        else {
+            throw 'Unable to download report for ' + prefix;
+        }
     }
     catch (err) {
         ico.attr('src', RED_ICON);
