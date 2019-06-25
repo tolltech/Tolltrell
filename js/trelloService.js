@@ -23,7 +23,7 @@ async function GetBoardCardActions(boardId) {
 }
 
 async function GetBoardLists(boardId) {
-  return await window.Trello.get('/boards/' + boardId + '/lists?cards=open');
+  return await window.Trello.get('/boards/' + boardId + '/lists?cards=all');
 }
 
 async function GetTrelloList(listId) {
