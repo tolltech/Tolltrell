@@ -105,6 +105,7 @@ async function GetListDetailReport(boardActions, boardId) {
     var lists = listsWithOpen.concat(listsWithClosed);
     var archiveListId = 'archiveId';
     listNameByIds[archiveListId] = 'Archive';
+    boardNameByListIds[archiveListId] = currentBoard.name;
     for (var i = 0; i < lists.length; ++i) {
         var list = lists[i];
         listIds.push(list.id);
