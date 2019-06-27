@@ -90,7 +90,7 @@ async function GetCardDetailReport(boardActions, boardId) {
 }
 
 async function GetListDetailReport(boardActions, boardId) {
-    var lists = await GetBoardLists(boardId);
+    var listsWithOpen = await GetBoardLists(boardId);
     var listsWithClosed = await GetBoardListsWithClosedCards(boardId);
     var currentBoard = await GetBoard(boardId);
 
@@ -102,15 +102,24 @@ async function GetListDetailReport(boardActions, boardId) {
 
     var snapshot = { Cards: {} };
     var listIds = [];
+    var lists = listsWithOpen.concat(listsWithClosed);
+    var archiveListId = 'archiveId';
+    listNameByIds[archiveListId] = 'Archive';
     for (var i = 0; i < lists.length; ++i) {
         var list = lists[i];
         listIds.push(list.id);
         listNameByIds[list.id] = list.name;
         boardNameByListIds[list.id] = currentBoard.name;
+
         var cards = list.cards || [];
         for (var j = 0; j < cards.length; ++j) {
             var card = cards[j];
-            snapshot.Cards[card.id] = { ListId: card.idList };
+
+            var cardListId = card.idList;
+            if (card.closed) {
+                cardListId = archiveListId;
+            }
+            snapshot.Cards[card.id] = { ListId: cardListId };
         }
     }
     dateSnapshots.push({ Day: nowStr, Snapshot: snapshot });
@@ -155,10 +164,10 @@ async function GetListDetailReport(boardActions, boardId) {
     }
 
     var otherListIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
-    listIds = distinct(listIds.concat(otherListIds));
+    var headerListIds = distinct(listIds.concat(otherListIds)).concat(archiveListId);
 
-    for (var i = 0; i < listIds.length; ++i) {
-        var listId = listIds[i];
+    for (var i = 0; i < headerListIds.length; ++i) {
+        var listId = headerListIds[i];
         if (listNameByIds[listId]) {
             continue;
         }
@@ -173,7 +182,7 @@ async function GetListDetailReport(boardActions, boardId) {
     sortBy(dateSnapshots, x => x.Day);
     var rows = [];
     rows.push(['TrelloList']
-        .concat(listIds
+        .concat(headerListIds
             .map(x => boardNameByListIds[x] + ' - ' + (listNameByIds[x] || ('UnknownList' + x)))
         )
     );
@@ -181,7 +190,7 @@ async function GetListDetailReport(boardActions, boardId) {
     for (var i = 0; i < dateSnapshots.length; ++i) {
         var snapshot = dateSnapshots[i];
         var snapshotCards = getArrayFromMap(snapshot.Snapshot.Cards);
-        rows.push([snapshot.Day].concat(listIds.map(function (listId) {
+        rows.push([snapshot.Day].concat(headerListIds.map(function (listId) {
             return snapshotCards.filter(x => x.Value && x.Value.ListId == listId).length;
         })));
     }
