@@ -83,7 +83,7 @@ async function GetCardDetailReport(boardActions, boardId) {
 
         rows.push([cardActions.CardName].concat(actionIdsHeaderRow.map(x => cardDaysById[x] === undefined
             ? 0
-            : ('' + cardDaysById[x]).replace(/\./g, ','))));
+            : ('' + cardDaysById[x]).replace(/\./g, ','))));//заменяем точки на запятые
     }
 
     return rows;
