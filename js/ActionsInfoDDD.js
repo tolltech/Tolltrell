@@ -62,7 +62,7 @@ function getActionInfo(prevAction, date) {
     actionInfo.Id = actionInfo.ListId || actionInfo.BoardId;
 
     if (prevAction.data.card && prevAction.data.card.closed) {
-        actionInfo.Name = (actionInfo.Board || 'Unknown board ') + 'Archive';
+        actionInfo.Name = 'Archive';
         actionInfo.Id = 'archiveId';
     }
 
