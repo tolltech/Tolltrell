@@ -26,8 +26,9 @@ var downloadFunc = async function (prefix) {
         console.log('Cant render popup without boardId');
         return;
     }
+
+    var ico = $('#' + prefix + 'ReportIconId');
     try {
-        var ico = $('#' + prefix + 'ReportIconId');
         ico.attr('src', GRAY_ICON);
 
         if (prefix == 'card') {
