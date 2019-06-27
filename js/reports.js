@@ -24,6 +24,14 @@ async function DownloadListReport(boardId) {
     DownloadCsv(rows, csvName);
 }
 
+async function CardsHtmlReport(boardId) {
+    var boardActions = await GetBoardCardActions(boardId);
+
+    var rows = await GetListDetailReport(boardActions, boardId);
+
+    AddTableByRows(rows, 'cardsHtmlTableId');
+}
+
 async function GetCardDetailReport(boardActions, boardId) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);

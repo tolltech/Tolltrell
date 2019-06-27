@@ -34,7 +34,7 @@ function intToString(num, size) {
     size = size || 2;
     while (s.length < size) s = '0' + s;
     return s;
-  }
+}
 
 function dateToSortableString(date) {
     return date.getFullYear() + '-'
@@ -68,4 +68,16 @@ function GetUrlParam(partamName) {
             return name[1];
         }
     }
+}
+
+function AddTableByRows(rows, htmlId) {
+    var table = $('<table>').addClass('foo');
+    var tr = $('<tr>');
+    for (var i = 0; i < rows.length; ++i) {
+        tr.append($('<td>').text(rows[i]));
+    }
+
+    table.append(th);
+    table.append(tr);
+    $('#' + htmlId).replaceWith(table);
 }

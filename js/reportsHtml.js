@@ -16,6 +16,7 @@ var clearFunc = async function (prefix) {
 t.render(async function () {
     await clearFunc('card');
     await clearFunc('list');
+    await clearFunc('cardsHtml');
 });
 
 var downloadFunc = async function (prefix) {
@@ -35,6 +36,9 @@ var downloadFunc = async function (prefix) {
         else if (prefix == 'list') {
             await DownloadListReport(boardId);
         }
+        else if (prefix == 'cardsHtml') {
+            await CardsHtmlReport(boardId);
+        }
         else {
             throw 'Unable to download report for ' + prefix;
         }
@@ -47,7 +51,9 @@ var downloadFunc = async function (prefix) {
     }
 
     ico.attr('src', GREEN_ICON);
-    t.closePopup();
+    if (prefix != 'cardsHtml') {
+        t.closePopup();
+    }
 }
 
 document.getElementById('cardReportButton').addEventListener('click', async function () {
@@ -56,4 +62,8 @@ document.getElementById('cardReportButton').addEventListener('click', async func
 
 document.getElementById('listReportButton').addEventListener('click', async function () {
     await downloadFunc('list');
+});
+
+document.getElementById('cardsHtmlReportButton').addEventListener('click', async function () {
+    await downloadFunc('cardsHtml');
 });
