@@ -91,6 +91,7 @@ async function GetCardDetailReport(boardActions, boardId) {
 
 async function GetListDetailReport(boardActions, boardId) {
     var lists = await GetBoardLists(boardId);
+    var listsWithClosed = await GetBoardListsWithClosedCards(boardId);
     var currentBoard = await GetBoard(boardId);
 
     var listNameByIds = {};
