@@ -58,7 +58,7 @@ async function GetCardDetailReport(boardActions, boardId) {
     }
 
     var actionIdsHeaderRow = distinct(nameIds);
-    actionIdsHeaderRow = sortBy(actionIdsHeaderRow, x => x);
+    sortBy(actionIdsHeaderRow, x => x);
 
     var rows = [];
     //header = 'Card, ... actions
@@ -175,7 +175,7 @@ async function GetListDetailReport(boardActions, boardId) {
 
     var otherListIds = distinct(boardActions.filter(x => x.data && x.data.list && x.data.list.id).map(x => x.data.list.id));
     var headerListIds = distinct(listIds.concat(otherListIds)).concat(archiveListId);
-    headerListIds = sortBy(headerListIds, x => x);
+    sortBy(headerListIds, x => x);
 
     for (var i = 0; i < headerListIds.length; ++i) {
         var listId = headerListIds[i];
