@@ -31,10 +31,16 @@ async function GetBoardsMovingActions(cardId, boardId) {
     }
 }
 
-function getListFromAction(action) {
+async function getListFromAction(action) {
     var actionList = action.data.listAfter || action.data.list;
-    var listName = actionList && actionList.name;
     var listId = actionList && actionList.id;
+    var listName = actionList && actionList.name;
+
+    if (!listName && listId) {
+        var list = await GetList(listId);
+        listName = list && list.name;
+    }
+
     return { Name: listName, Id: listId };
 }
 
@@ -45,12 +51,12 @@ function getBoardFromAction(action) {
     return { Name: boardName, Id: boardId };
 }
 
-function getActionInfo(prevAction, date) {
+async function getActionInfo(prevAction, date) {
     var actionInfo = {
         Date: new Date(date)
     };
 
-    var prevActionList = getListFromAction(prevAction);
+    var prevActionList = await getListFromAction(prevAction);
     actionInfo.List = prevActionList.Name;
     actionInfo.ListId = prevActionList.Id;
 
@@ -96,12 +102,12 @@ async function BuildActionInfosByCard(cardId, boardId) {
         var action = actions[i];
         var prevAction = actions[i - 1];
 
-        var actionInfo = getActionInfo(prevAction, action.date);
+        var actionInfo = await getActionInfo(prevAction, action.date);
         actionInfos.push(actionInfo);
     }
 
     var lastAction = actions[actions.length - 1];
-    var lastActionInfo = getActionInfo(lastAction, new Date());
+    var lastActionInfo = await getActionInfo(lastAction, new Date());
     actionInfos.push(lastActionInfo);
 
     var currentDate = fisrstActionDate;
