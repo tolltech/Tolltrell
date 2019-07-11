@@ -34,7 +34,10 @@ t.render(async function () {
 
     var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);
     var nameByIds = toDict(actionInfos, x => x.Id, x => x.Name);
-    var sumActionInfos = sumDays(actionInfos);
+
+    var thisBoardActionInfos = actionInfos.filter(x => x.BoardId == card.idBoard);
+
+    var sumActionInfos = sumDays(thisBoardActionInfos);
     //todo: спрятать внутрь sumDays
     sumActionInfos = Object.entries(sumActionInfos).map(function (x) {
         var s = {};
