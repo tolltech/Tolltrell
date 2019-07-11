@@ -46,23 +46,6 @@ t.render(async function () {
         return s;
     });
 
-    var ctx = document.getElementById('cardLifestyleCanvas').getContext('2d');
-    var chart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: sumActionInfos.map(x => x.Name),
-            datasets: [{
-                backgroundColor: 'rgb(24, 249, 114)',
-                borderColor: 'rgb(24, 249, 114)',
-                label: 'days',
-                data: sumActionInfos.map(x => x.Days)
-            }]
-        },
-
-        // Configuration options go here
-        options: {}
-    });
-
     AddTable(sumActionInfos, 'cardLifestyleSum');
     AddTable(actionInfos, 'cardLifestyle');
 });
