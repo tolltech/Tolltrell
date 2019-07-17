@@ -24,7 +24,11 @@ async function GetBoardsMovingActions(cardId, boardId) {
     }
     catch (err) {
         if (err && err.status == 404) {
-            console.log('Error while get actions for board ' + boardId + ' Error ' + JSON.stringify(err));
+            console.log('Not found Error while get actions for board ' + boardId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        if (err && err.status == 401) {
+            console.log('Unauthorized Error while get actions for board ' + boardId + ' Error ' + JSON.stringify(err));
             return [];
         }
         throw err;
