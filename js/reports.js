@@ -168,7 +168,7 @@ async function GetListDetailReport(boardActions, boardId) {
 
             dateSnapshots.push({ Day: actionDateStr, Snapshot: newSnapshot });
         }
-        if (action.type == 'createCard') {
+        if (action.type == 'createCard' || action.type == 'copyCard') {
             createdCardIdsThisDay.push(cardId);
         }
     }

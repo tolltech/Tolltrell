@@ -19,7 +19,7 @@ window.Trello.authorize({
 });
 
 async function GetBoardCardActions(boardId) {
-  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,updateCard:idList,updateCard:closed&limit=1000');
+  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,copyCard,updateCard:idList,updateCard:closed&limit=1000');
 }
 
 async function GetBoardLists(boardId) {
