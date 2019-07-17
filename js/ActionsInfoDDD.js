@@ -13,7 +13,20 @@ async function GetBoard(boardId) {
 
 var lists = {};
 async function GetList(listId) {
+    try {
     return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId));
+    }
+    catch (err) {
+        if (err && err.status == 404) {
+            console.log('Not found Error while get list ' + listId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        if (err && err.status == 401) {
+            console.log('Unauthorized Error while get list ' + listId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        throw err;
+    }
 }
 
 var boardsMovingActions = {};
