@@ -36,7 +36,7 @@ async function GetCardDetailReport(boardActions, boardId) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);
     cardIds = distinct(cardIds);
-    var cardNamesByIds = toDict(cards, x => x.id, x => x.name);
+    var cardNamesByIds = toDict(cards.reverse(), x => x.id, x => x.name);
 
     var actionsByCard = {};
     var nameIds = [];
