@@ -26,6 +26,10 @@ async function GetCardActions(cardId) {
   return await window.Trello.get('/cards/' + cardId + '/actions?filter=moveCardToBoard,createCard,copyCard,updateCard:idList,updateCard:closed&limit=1000');
 }
 
+async function GetAllCardActions(cardId) {
+  return await window.Trello.get('/cards/' + cardId + '/actions?limit=1000');
+}
+
 async function GetBoardLists(boardId) {
   return await window.Trello.get('/boards/' + boardId + '/lists?cards=open');
 }

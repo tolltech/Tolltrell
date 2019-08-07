@@ -56,6 +56,16 @@ async function downloadJsonFunc(){
     DownloadCsvJson(actions, 'Card_ ' + cardId + '_actions.json');
 }
 
+async function downloadAllJsonFunc(){
+    var cardId = GetUrlParam('cardId');
+    var actions = await GetAllCardActions(cardId);
+    DownloadCsvJson(actions, 'Card_ ' + cardId + '_all_actions.json');
+}
+
 document.getElementById('cardActionsButton').addEventListener('click', async function () {
     await downloadJsonFunc();
+});
+
+document.getElementById('cardAllActionsButton').addEventListener('click', async function () {
+    await downloadAllJsonFunc();
 });
