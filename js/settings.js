@@ -49,3 +49,13 @@ t.render(async function () {
     AddTable(sumActionInfos, 'cardLifestyleSum');
     AddTable(actionInfos, 'cardLifestyle');
 });
+
+async function downloadJsonFunc(){
+    var cardId = GetUrlParam('cardId');
+    var actions = await GetCardActions(cardId);
+    DownloadCsvJson(actions, 'Card_ ' + cardId + '_actions.json');
+}
+
+document.getElementById('cardActionsButton').addEventListener('click', async function () {
+    await downloadJsonFunc();
+});

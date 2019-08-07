@@ -57,6 +57,12 @@ var downloadFunc = async function (prefix) {
     }
 }
 
+async function downloadJsonFunc(){
+    var boardId = GetUrlParam('boardId');
+    var actions = await GetBoardCardActions(boardId);
+    DownloadCsvJson(actions, 'Board_' + boardId + '_actions.json');
+}
+
 document.getElementById('cardReportButton').addEventListener('click', async function () {
     await downloadFunc('card');
 });
@@ -67,4 +73,8 @@ document.getElementById('listReportButton').addEventListener('click', async func
 
 document.getElementById('cardsHtmlReportButton').addEventListener('click', async function () {
     await downloadFunc('cardsHtml');
+});
+
+document.getElementById('boardActionsButton').addEventListener('click', async function () {
+    await downloadJsonFunc();
 });
