@@ -38,11 +38,20 @@ var getListReport = async function (t) {
   await DownloadListReport(boardId);
 };
 
-var boardButtonCallback = async function (t) {
+var reportBoardButtonCallback = async function (t) {
   var boardId = await t.board('id').get('id');
   return t.popup({
     title: 'Reports',
     url: './reports.html?boardId=' + boardId,
+    height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
+  });
+};
+
+var listsBoardButtonCallback = async function (t) {
+  var boardId = await t.board('id').get('id');
+  return t.popup({
+    title: 'Lists',
+    url: './lists.html?boardId=' + boardId,
     height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
   });
 };
@@ -64,18 +73,18 @@ TrelloPowerUp.initialize({
     //     return getCardReport(t);
     //   }
     // }, 
-    // {
-    //   icon: TOLLTECHER_ICON,
-    //   text: 'Lists Details',
-    //   callback: function (t, options) {
-    //     return getListReport(t);
-    //   }
-    // }, 
+    {
+      icon: TOLLTECHER_ICON,
+      text: 'Toll Lists',
+      callback: function (t, options) {
+        return listsBoardButtonCallback(t);
+      }
+    }, 
     {
       icon: TOLLTECHER_ICON,
       text: 'Toll Reports',
       callback: function (t, options) {
-        return boardButtonCallback(t);
+        return reportBoardButtonCallback(t);
       }
     }];
   },
