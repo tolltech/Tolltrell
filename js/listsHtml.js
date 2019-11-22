@@ -16,7 +16,7 @@ t.render(async function () {
         var listsDiv = $('#listsDivId');
         listsDiv.html('');
 
-        for (var i = 0; i < lists.Length; ++i) {
+        for (var i = 0; i < lists.length; ++i) {
             var list = lists[i];
 
             var listDiv = $('<div>');
