@@ -27,7 +27,7 @@ t.render(async function () {
             var spanInput = $('<td><input type="text" style="width: 40px"></td>');
             var button = $('<button class="mod-primary">Set WIP</button>');
             button.click(async function () {
-                await SetListSoftLimit(list.id, $('tr[listId"' + list.id + '"] input').val());
+                await SetListSoftLimit(list.id, $('tr[listId="' + list.id + '"] input').val());
             });
             
             var spanButton = $('<td>');
