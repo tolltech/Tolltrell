@@ -13,19 +13,19 @@ t.render(async function () {
 
         var lists = await GetBoardOpenLists(boardId);
 
-        var listsDiv = $('#listsDivId');
+        var listsDiv = $('#listsTableId');
         listsDiv.html('');
 
         for (var i = 0; i < lists.length; ++i) {
             var list = lists[i];
 
-            var listDiv = $('<div>');
+            var listDiv = $('<tr>');
             listDiv.attr('listId', list.id);
 
-            var spanListName = $('<span>');
+            var spanListName = $('<td>');
             spanListName.text(list.name);
-            var spanInput = $('<span><input type="text" style="width: 40px"></span>');
-            var spanButton = $('<span> <button class="mod-primary">Set WIP</button></span>');
+            var spanInput = $('<td><input type="text" style="width: 40px"></td>');
+            var spanButton = $('<td> <button class="mod-primary">Set WIP</button></td>');
 
             listDiv.append(spanListName);
             listDiv.append(spanInput);
