@@ -25,7 +25,13 @@ t.render(async function () {
             var spanListName = $('<td>');
             spanListName.text(list.name);
             var spanInput = $('<td><input type="text" style="width: 40px"></td>');
-            var spanButton = $('<td> <button class="mod-primary">Set WIP</button></td>');
+            var button = $('<button class="mod-primary">Set WIP</button>');
+            button.click(async function () {
+                await SetListSoftLimit(list.id, $('tr[listId"' + list.id + '"] input').val());
+            });
+            
+            var spanButton = $('<td>');
+            spanButton.append(button);
 
             listDiv.append(spanListName);
             listDiv.append(spanInput);

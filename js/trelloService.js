@@ -42,6 +42,10 @@ async function GetBoardListsWithClosedCards(boardId) {
   return await window.Trello.get('/boards/' + boardId + '/lists?cards=closed');
 }
 
+async function SetListSoftLimit(listId, softLimit) {
+  return await window.Trello.put('/lists/' + listId + '/softLimit?value=' + softLimit);
+}
+
 async function GetTrelloList(listId) {
   try {
     return await window.Trello.get('/lists/' + listId);
