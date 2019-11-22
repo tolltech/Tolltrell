@@ -37,8 +37,7 @@ t.render(async function () {
         listsDiv.replaceWith(listsDiv);
     }
     catch (err) {
-        ico.attr('src', RED_ICON);
-        var errorDiv = $('#' + prefix + 'ErrorId');
+        var errorDiv = $('#errorId');
         errorDiv.html(JSON.stringify(err));
         return;
     }
