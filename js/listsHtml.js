@@ -24,10 +24,11 @@ t.render(async function () {
 
             var spanListName = $('<td>');
             spanListName.text(list.name);
-            var spanInput = $('<td><input type="text" style="width: 40px"></td>');
+            var inputId = 'wipInput' + list.id;
+            var spanInput = $('<td><input id="'+ inputId +'" type="text" style="width: 40px"/></td>');
             var button = $('<button class="mod-primary">Set WIP</button>');
             button.click(async function () {
-                await SetListSoftLimit(list.id, $('tr[listId="' + list.id + '"] input').val());
+                await SetListSoftLimit(list.id, $('#' + inputId).val());
             });
             
             var spanButton = $('<td>');
