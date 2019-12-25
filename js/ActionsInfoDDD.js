@@ -29,6 +29,24 @@ async function GetList(listId) {
     }
 }
 
+var cards = {};
+async function GetCard(cardId) {
+    try {
+    return cards[cardId] || (cards[cardId] = await window.Trello.get('/cards/' + cardId));
+    }
+    catch (err) {
+        if (err && err.status == 404) {
+            console.log('Not found Error while get list ' + cardId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        if (err && err.status == 401) {
+            console.log('Unauthorized Error while get list ' + cardId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        throw err;
+    }
+}
+
 var boardsMovingActions = {};
 async function GetBoardsMovingActions(cardId, boardId) {
     try {

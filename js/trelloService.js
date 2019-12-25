@@ -46,6 +46,10 @@ async function SetListSoftLimit(listId, softLimit) {
   return await window.Trello.put('/lists/' + listId + '/softLimit?value=' + softLimit);
 }
 
+async function GetListCards(listId) {
+  return await window.Trello.get('/lists/' + listId + '/cards');
+}
+
 async function GetTrelloList(listId) {
   try {
     return await window.Trello.get('/lists/' + listId);

@@ -3,6 +3,7 @@
 var Promise = TrelloPowerUp.Promise;
 
 var TOLLTECHER_ICON = './images/icon.png';
+var TOLLTECHER_ICON_RED = './images/iconred.png';
 
 var getBadges = async function (t) {
   var cardId = await t.card('id').get('id');
@@ -26,6 +27,25 @@ var getBadges = async function (t) {
       });
     }
   }];
+};
+
+var getWipLimitBadges = async function (t) {
+  var cardId = await t.card('id').get('id');
+  var card = await GetCard(cardId);
+  var listId = card.idList;
+  var list = await  GetList(listId);
+  var softLimit = list.softLimit;
+  var cards = await GetListCards(listId);
+
+  if (softLimit && cards && cards.length && softLimit > cards.length){
+    return [{
+      title: 'WIP LIMIT EXCEEDED',
+      text: 'WIP',
+      icon: TOLLTECHER_ICON_RED
+    }];
+  }
+
+  return [];
 };
 
 var getCardReport = async function (t) {
@@ -58,10 +78,10 @@ var listsBoardButtonCallback = async function (t) {
 
 TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
-    return getBadges(t);
+    return getBadges(t).concat(getWipLimitBadges(t));
   },
   'card-detail-badges': function (t, options) {
-    return getBadges(t);
+    return getBadges(t).concat(getWipLimitBadges(t));
   },
 
   'board-buttons': function (t, options) {
