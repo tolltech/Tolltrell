@@ -76,12 +76,18 @@ var listsBoardButtonCallback = async function (t) {
   });
 };
 
+var getAllBadges = async function(t){
+  var left = await getBadges(t);
+  var right = await getWipLimitBadges(t);
+  return left.concat(right);
+}
+
 TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
-    return getBadges(t).concat(getWipLimitBadges(t));
+    return getAllBadges(t);
   },
   'card-detail-badges': function (t, options) {
-    return getBadges(t).concat(getWipLimitBadges(t));
+    return getAllBadges(t);
   },
 
   'board-buttons': function (t, options) {
