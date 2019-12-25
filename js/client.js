@@ -37,10 +37,10 @@ var getWipLimitBadges = async function (t) {
   var softLimit = list.softLimit;
   var cards = await GetListCards(listId);
 
-  if (softLimit && cards && cards.length && softLimit > cards.length){
+  if (softLimit && cards && cards.length && softLimit < cards.length){
     return [{
-      title: 'WIP LIMIT EXCEEDED',
-      text: 'WIP',
+      title: 'WIP',
+      text: 'WIP LIMIT EXCEEDED',
       icon: TOLLTECHER_ICON_RED
     }];
   }
