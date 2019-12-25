@@ -78,7 +78,7 @@ var listsBoardButtonCallback = async function (t) {
 
 var getAllBadges = async function(t){
   var left = await getBadges(t);
-  var right = await getWipLimitBadges(t);
+  var right = [];//await getWipLimitBadges(t);
   return left.concat(right);
 }
 
