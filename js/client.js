@@ -41,7 +41,8 @@ var getWipLimitBadges = async function (t) {
     return [{
       title: 'WIP',
       text: 'WIP LIMIT EXCEEDED',
-      icon: TOLLTECHER_ICON_RED
+      icon: TOLLTECHER_ICON_RED,
+      color: 'red'
     }];
   }
 
