@@ -14,7 +14,7 @@ async function GetBoard(boardId) {
 var lists = {};
 async function GetList(listId) {
     try {
-    return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId));
+    return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId + '?fields=id,name,softLimit'));
     }
     catch (err) {
         if (err && err.status == 404) {
