@@ -30,12 +30,10 @@ var getBadges = async function (t) {
 };
 
 var getWipLimitBadges = async function (t) {
-  var cardId = await t.card('id').get('id');
-  var card = await GetCard(cardId);
-  var listId = card.idList;
+  var listId = await t.list('id').get('id');  
   var list = await  GetList(listId);
   var softLimit = list.softLimit;
-  var cards = await GetListCards(listId);
+  var cards = await GetCards(listId);
 
   if (softLimit && cards && cards.length && softLimit < cards.length){
     return [{
@@ -85,7 +83,7 @@ var getAllBadges = async function(t){
 
 TrelloPowerUp.initialize({
   'card-badges': function (t, options) {
-    return getAllBadges(t);
+    return getWipLimitBadges(t);
   },
   'card-detail-badges': function (t, options) {
     return getAllBadges(t);

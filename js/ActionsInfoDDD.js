@@ -29,6 +29,24 @@ async function GetList(listId) {
     }
 }
 
+var listCards = {};
+async function GetCards(listId) {
+    try {
+    return listCards[listId] || (listCards[listId] = await GetListCards(listId));
+    }
+    catch (err) {
+        if (err && err.status == 404) {
+            console.log('Not found Error while get list ' + listId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        if (err && err.status == 401) {
+            console.log('Unauthorized Error while get list ' + listId + ' Error ' + JSON.stringify(err));
+            return [];
+        }
+        throw err;
+    }
+}
+
 var cards = {};
 async function GetCard(cardId) {
     try {
