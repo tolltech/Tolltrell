@@ -100,14 +100,14 @@ TrelloPowerUp.initialize({
     // }, 
     {
       icon: TOLLTECHER_ICON,
-      text: 'Toll Lists',
+      text: 'WIP Limits',
       callback: function (t, options) {
         return listsBoardButtonCallback(t);
       }
     }, 
     {
       icon: TOLLTECHER_ICON,
-      text: 'Toll Reports',
+      text: 'Reports',
       callback: function (t, options) {
         return reportBoardButtonCallback(t);
       }
