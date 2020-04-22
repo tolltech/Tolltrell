@@ -128,7 +128,7 @@ async function getActionInfo(prevAction, date) {
     return actionInfo;
 }
 
-async function BuildActionInfosByCard(cardId, boardId, withoutWeekend) {
+async function BuildActionInfosByCard(cardId, boardId) {
     var actions = await GetBoardsMovingActions(cardId, boardId);
 
     var otherBoardIds = actions
@@ -166,8 +166,10 @@ async function BuildActionInfosByCard(cardId, boardId, withoutWeekend) {
     var currentDate = fisrstActionDate;
     for (var i = 0; i < actionInfos.length; ++i) {
 
-        var deltaDays = GetDeltaDays(currentDate, actionInfos[i].Date, withoutWeekend);
+        var deltaDays = GetDeltaDays(currentDate, actionInfos[i].Date, false);
+        var deltaDaysExcludeWeekends = GetDeltaDays(currentDate, actionInfos[i].Date, true);
         actionInfos[i].Days = deltaDays;
+        actionInfos[i].DaysExcludeWeekend = deltaDaysExcludeWeekends;
 
         currentDate = actionInfos[i].Date;
     }

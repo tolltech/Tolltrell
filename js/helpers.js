@@ -12,6 +12,14 @@ function sumDays(actions) {
     }, {});
 }
 
+function sumDaysExcludeWeekend(actions) {
+    return actions.reduce(function (map, cardAction) {
+        var current = map[cardAction.Id];
+        map[cardAction.Id] = current ? current + cardAction.DaysExcludeWeekend : cardAction.DaysExcludeWeekend;
+        return map;
+    }, {});
+}
+
 function toDict(array, getKey, getValue) {
     return array.reduce(function (map, item) {
         map[getKey(item)] = getValue(item);
