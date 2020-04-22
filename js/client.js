@@ -23,7 +23,7 @@ var getBadges = async function (t) {
       return context.popup({
         title: 'Card Lifestyle',
         url: './settings.html?cardId=' + cardId,
-        height: 200
+        height: 300
       });
     }
   }];
@@ -62,7 +62,7 @@ var reportBoardButtonCallback = async function (t) {
   return t.popup({
     title: 'Reports',
     url: './reports.html?boardId=' + boardId,
-    height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
+    height: 201 // we can always resize later, but if we know the size in advance, its good to tell Trello
   });
 };
 
@@ -71,7 +71,7 @@ var listsBoardButtonCallback = async function (t) {
   return t.popup({
     title: 'Lists',
     url: './lists.html?boardId=' + boardId,
-    height: 184 // we can always resize later, but if we know the size in advance, its good to tell Trello
+    height: 650 // we can always resize later, but if we know the size in advance, its good to tell Trello
   });
 };
 
