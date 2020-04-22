@@ -32,7 +32,7 @@ t.render(async function () {
         return;
     }
 
-    var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);
+    var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);    
     var nameByIds = toDict(actionInfos, x => x.Id, x => x.Name);
 
     var thisBoardActionInfos = actionInfos.filter(x => x.BoardId == card.idBoard);
@@ -46,7 +46,17 @@ t.render(async function () {
         return s;
     });
 
+    var sumActionInfosExcludeWeekends = sumDaysExcludeWeekend(thisBoardActionInfos);
+    //todo: спрятать внутрь sumDays
+    sumActionInfosExcludeWeekends = Object.entries(sumActionInfosExcludeWeekends).map(function (x) {
+        var s = {};
+        s.Name = nameByIds[x[0]];
+        s.Days = x[1];
+        return s;
+    });
+
     AddTable(sumActionInfos, 'cardLifestyleSum');
+    AddTable(sumActionInfosExcludeWeekends, 'cardLifestyleSumExcludeWeekend');
     AddTable(actionInfos, 'cardLifestyle');
 });
 

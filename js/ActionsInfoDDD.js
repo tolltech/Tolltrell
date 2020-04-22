@@ -14,7 +14,7 @@ async function GetBoard(boardId) {
 var lists = {};
 async function GetList(listId) {
     try {
-    return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId + '?fields=id,name,softLimit'));
+        return lists[listId] || (lists[listId] = await window.Trello.get('/lists/' + listId + '?fields=id,name,softLimit'));
     }
     catch (err) {
         if (err && err.status == 404) {
@@ -32,7 +32,7 @@ async function GetList(listId) {
 var listCards = {};
 async function GetCards(listId) {
     try {
-    return listCards[listId] || (listCards[listId] = await GetListCards(listId));
+        return listCards[listId] || (listCards[listId] = await GetListCards(listId));
     }
     catch (err) {
         if (err && err.status == 404) {
@@ -50,7 +50,7 @@ async function GetCards(listId) {
 var cards = {};
 async function GetCard(cardId) {
     try {
-    return cards[cardId] || (cards[cardId] = await window.Trello.get('/cards/' + cardId));
+        return cards[cardId] || (cards[cardId] = await window.Trello.get('/cards/' + cardId));
     }
     catch (err) {
         if (err && err.status == 404) {
@@ -165,9 +165,11 @@ async function BuildActionInfosByCard(cardId, boardId) {
 
     var currentDate = fisrstActionDate;
     for (var i = 0; i < actionInfos.length; ++i) {
-        var delta = actionInfos[i].Date - currentDate;
-        var deltaDays = delta / (1000.0 * 60 * 60 * 24);
+
+        var deltaDays = GetDeltaDays(currentDate, actionInfos[i].Date, false);
+        var deltaDaysExcludeWeekends = GetDeltaDays(currentDate, actionInfos[i].Date, true);
         actionInfos[i].Days = deltaDays;
+        actionInfos[i].DaysExcludeWeekend = deltaDaysExcludeWeekends;
 
         currentDate = actionInfos[i].Date;
     }
