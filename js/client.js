@@ -21,7 +21,7 @@ var getBadges = async function (t) {
     icon: TOLLTECHER_ICON,
     callback: function (context) {
       return context.popup({
-        title: 'Card Lifestyle',
+        title: 'Card timeline',
         url: './settings.html?cardId=' + cardId,
         height: 370
       });

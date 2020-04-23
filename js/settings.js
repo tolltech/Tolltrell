@@ -3,12 +3,8 @@
 var Promise = TrelloPowerUp.Promise;
 var t = TrelloPowerUp.iframe();
 
-function AddTable(actionInfos, htmlId, color) {
+function AddTable(actionInfos, htmlId) {
     var table = $('<table>');
-
-    if (color) {
-        table = table.css("color", color);
-    }
 
     var th = $('<tr>');
     var tr = $('<tr>');
@@ -61,7 +57,7 @@ t.render(async function () {
     });
 
     AddTable(sumActionInfos, 'cardLifestyleSum');
-    AddTable(sumActionInfosExcludeWeekends, 'cardLifestyleSumExcludeWeekend', 'red');
+    AddTable(sumActionInfosExcludeWeekends, 'cardLifestyleSumExcludeWeekend');
     AddTable(actionInfos, 'cardLifestyle');
 });
 
