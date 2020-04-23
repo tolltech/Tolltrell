@@ -23,7 +23,7 @@ var getBadges = async function (t) {
       return context.popup({
         title: 'Card Lifestyle',
         url: './settings.html?cardId=' + cardId,
-        height: 300
+        height: 370
       });
     }
   }];
