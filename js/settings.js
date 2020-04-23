@@ -3,8 +3,13 @@
 var Promise = TrelloPowerUp.Promise;
 var t = TrelloPowerUp.iframe();
 
-function AddTable(actionInfos, htmlId) {
-    var table = $('<table>').addClass('foo');
+function AddTable(actionInfos, htmlId, color) {
+    var table = $('<table>');
+
+    if (color) {
+        table = table.css("color", color);
+    }
+
     var th = $('<tr>');
     var tr = $('<tr>');
     for (var i = 0; i < actionInfos.length; ++i) {
@@ -32,7 +37,7 @@ t.render(async function () {
         return;
     }
 
-    var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);    
+    var actionInfos = await BuildActionInfosByCard(card.id, card.idBoard);
     var nameByIds = toDict(actionInfos, x => x.Id, x => x.Name);
 
     var thisBoardActionInfos = actionInfos.filter(x => x.BoardId == card.idBoard);
@@ -56,17 +61,17 @@ t.render(async function () {
     });
 
     AddTable(sumActionInfos, 'cardLifestyleSum');
-    AddTable(sumActionInfosExcludeWeekends, 'cardLifestyleSumExcludeWeekend');
+    AddTable(sumActionInfosExcludeWeekends, 'cardLifestyleSumExcludeWeekend', 'red');
     AddTable(actionInfos, 'cardLifestyle');
 });
 
-async function downloadJsonFunc(){
+async function downloadJsonFunc() {
     var cardId = GetUrlParam('cardId');
     var actions = await GetCardActions(cardId);
     DownloadCsvJson(actions, 'Card_ ' + cardId + '_actions.json');
 }
 
-async function downloadAllJsonFunc(){
+async function downloadAllJsonFunc() {
     var cardId = GetUrlParam('cardId');
     var actions = await GetAllCardActions(cardId);
     DownloadCsvJson(actions, 'Card_ ' + cardId + '_all_actions.json');

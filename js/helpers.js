@@ -79,7 +79,7 @@ function GetUrlParam(partamName) {
 }
 
 function AddTableByRows(rows, htmlId) {
-    var table = $('<table>').addClass('foo');
+    var table = $('<table>');
     for (var i = 0; i < rows.length; ++i) {
         var tr = $('<tr>');
         for (var j = 0; j < rows[i].length; ++j) {
