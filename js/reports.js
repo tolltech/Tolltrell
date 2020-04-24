@@ -1,4 +1,7 @@
 async function DownloadCardReport(boardId) {
+    var from = $('#reportFrom').val();
+    var to = $('#reportTo').val();
+
     var boardActions = await GetBoardCardActions(boardId);
 
     var rows = await GetCardDetailReport(boardActions, boardId);
@@ -12,6 +15,9 @@ async function DownloadCardReport(boardId) {
 }
 
 async function DownloadListReport(boardId) {
+    var from = $('#reportFrom').val();
+    var to = $('#reportTo').val();
+
     var boardActions = await GetBoardCardActions(boardId);
 
     var rows = await GetListDetailReport(boardActions, boardId);
@@ -32,7 +38,7 @@ async function CardsHtmlReport(boardId) {
     AddTableByRows(rows, 'cardsHtmlTableId');
 }
 
-async function GetCardDetailReport(boardActions, boardId) {
+async function GetCardDetailReport(boardActions, boardId, from, to) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);
     cardIds = distinct(cardIds);
@@ -98,7 +104,7 @@ async function GetCardDetailReport(boardActions, boardId) {
     return rows;
 }
 
-async function GetListDetailReport(boardActions, boardId) {
+async function GetListDetailReport(boardActions, boardId, from, to) {
     var listsWithOpen = await GetBoardLists(boardId);
     var listsWithClosed = await GetBoardListsWithClosedCards(boardId);
     var currentBoard = await GetBoard(boardId);
