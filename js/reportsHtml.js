@@ -27,18 +27,21 @@ var downloadFunc = async function (prefix) {
         return;
     }
 
+    var from = $('#reportFrom').val();
+    var to = $('#reportTo').val();
+    
     var ico = $('#' + prefix + 'ReportIconId');
     try {
         ico.attr('src', GRAY_ICON);
 
         if (prefix == 'card') {
-            await DownloadCardReport(boardId);
+            await DownloadCardReport(boardId, from, to);
         }
         else if (prefix == 'list') {
-            await DownloadListReport(boardId);
+            await DownloadListReport(boardId, from, to);
         }
         else if (prefix == 'cardsHtml') {
-            await CardsHtmlReport(boardId);
+            await CardsHtmlReport(boardId, from, to);
         }
         else {
             throw 'Unable to download report for ' + prefix;

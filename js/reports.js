@@ -1,10 +1,7 @@
-async function DownloadCardReport(boardId) {
-    var from = $('#reportFrom').val();
-    var to = $('#reportTo').val();
-
+async function DownloadCardReport(boardId, from, to) {
     var boardActions = await GetBoardCardActions(boardId);
 
-    var rows = await GetCardDetailReport(boardActions, boardId);
+    var rows = await GetCardDetailReport(boardActions, boardId, from, to);
 
     var now = new Date();
     var board = await window.Trello.get('/boards/' + boardId);
@@ -14,13 +11,10 @@ async function DownloadCardReport(boardId) {
     DownloadCsv(rows, csvName);
 }
 
-async function DownloadListReport(boardId) {
-    var from = $('#reportFrom').val();
-    var to = $('#reportTo').val();
-
+async function DownloadListReport(boardId, from, to) {
     var boardActions = await GetBoardCardActions(boardId);
 
-    var rows = await GetListDetailReport(boardActions, boardId);
+    var rows = await GetListDetailReport(boardActions, boardId, from, to);
 
     var now = new Date();
     var board = await window.Trello.get('/boards/' + boardId);
@@ -30,10 +24,10 @@ async function DownloadListReport(boardId) {
     DownloadCsv(rows, csvName);
 }
 
-async function CardsHtmlReport(boardId) {
+async function CardsHtmlReport(boardId, from, to) {
     var boardActions = await GetBoardCardActions(boardId);
 
-    var rows = await GetListDetailReport(boardActions, boardId);
+    var rows = await GetListDetailReport(boardActions, boardId, from, to);
 
     AddTableByRows(rows, 'cardsHtmlTableId');
 }
