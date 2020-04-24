@@ -18,8 +18,18 @@ window.Trello.authorize({
   error: authenticationFailure
 });
 
-async function GetBoardCardActions(boardId) {
-  return await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,copyCard,updateCard:idList,updateCard:closed&limit=1000');
+async function GetBoardCardActions(boardId, from, to) {
+  var result = await window.Trello.get('/boards/' + boardId + '/actions?filter=moveCardToBoard,createCard,copyCard,updateCard:idList,updateCard:closed&limit=1000');
+
+  if (from) {
+    result = result.filter(x => !x.date || new Date(x.date) >= from);
+  }
+
+  if (to) {
+    result = result.filter(x => !x.date || new Date(x.date) <= to);
+  }
+
+  return result;
 }
 
 async function GetCardActions(cardId) {

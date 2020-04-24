@@ -29,7 +29,9 @@ var downloadFunc = async function (prefix) {
 
     var from = $('#reportFrom').val();
     var to = $('#reportTo').val();
-    
+    from = from && new Date(from);
+    to = to && new Date(to);
+
     var ico = $('#' + prefix + 'ReportIconId');
     try {
         ico.attr('src', GRAY_ICON);

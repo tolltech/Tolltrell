@@ -1,7 +1,7 @@
 async function DownloadCardReport(boardId, from, to) {
-    var boardActions = await GetBoardCardActions(boardId);
+    var boardActions = await GetBoardCardActions(boardId, from, to);
 
-    var rows = await GetCardDetailReport(boardActions, boardId, from, to);
+    var rows = await GetCardDetailReport(boardActions, boardId);
 
     var now = new Date();
     var board = await window.Trello.get('/boards/' + boardId);
@@ -12,9 +12,9 @@ async function DownloadCardReport(boardId, from, to) {
 }
 
 async function DownloadListReport(boardId, from, to) {
-    var boardActions = await GetBoardCardActions(boardId);
+    var boardActions = await GetBoardCardActions(boardId, from, to);
 
-    var rows = await GetListDetailReport(boardActions, boardId, from, to);
+    var rows = await GetListDetailReport(boardActions, boardId);
 
     var now = new Date();
     var board = await window.Trello.get('/boards/' + boardId);
@@ -25,14 +25,14 @@ async function DownloadListReport(boardId, from, to) {
 }
 
 async function CardsHtmlReport(boardId, from, to) {
-    var boardActions = await GetBoardCardActions(boardId);
+    var boardActions = await GetBoardCardActions(boardId, from, to);
 
-    var rows = await GetListDetailReport(boardActions, boardId, from, to);
+    var rows = await GetListDetailReport(boardActions, boardId);
 
     AddTableByRows(rows, 'cardsHtmlTableId');
 }
 
-async function GetCardDetailReport(boardActions, boardId, from, to) {
+async function GetCardDetailReport(boardActions, boardId) {
     var cards = boardActions.filter(x => x.data.card).map(x => x.data.card);
     var cardIds = cards.map(x => x.id);
     cardIds = distinct(cardIds);
@@ -98,7 +98,7 @@ async function GetCardDetailReport(boardActions, boardId, from, to) {
     return rows;
 }
 
-async function GetListDetailReport(boardActions, boardId, from, to) {
+async function GetListDetailReport(boardActions, boardId) {
     var listsWithOpen = await GetBoardLists(boardId);
     var listsWithClosed = await GetBoardListsWithClosedCards(boardId);
     var currentBoard = await GetBoard(boardId);
