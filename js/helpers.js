@@ -4,6 +4,20 @@ function distinct(array) {
     })
 }
 
+function includesAnyLowerCase(src, subStrings) {
+    if (!src || !subStrings || !subStrings.length) {
+        return false;
+    }
+
+    for (var i = 0; i < subStrings.length; ++i) {
+        if (src.toLowerCase().includes(subStrings[i].toLowerCase())) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function sumDays(actions) {
     return actions.reduce(function (map, cardAction) {
         var current = map[cardAction.Id];

@@ -35,6 +35,21 @@ var getWipLimitBadges = async function (t) {
   var softLimit = list.softLimit;
   var cards = await GetCards(listId);
 
+  try {
+    var cardsWithoutStopLabel = cards
+      .filter(x =>
+        !x.labels
+        || x.labels
+          .filter(y =>
+            includesAnyLowerCase(y.name, ['stop', 'стоп'])
+          )
+          .length <= 0
+      );
+    console.log(list.name + ' - ' + cardsWithoutStopLabel.length);
+  }
+  catch (err) {
+  }  
+
   if (softLimit && cards && cards.length && softLimit < cards.length){
     return [{
       title: 'WIP',
